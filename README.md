@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, and production build pass. A local PostgreSQL connection string is configured, but the database connection, migration, and acceptance checks have not yet been run. No Level 1 checks are marked as passed, and no public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Two of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
 
 ## Assessment details
 
@@ -30,18 +30,18 @@ The following features have source code, but are **not acceptance-tested** yet:
 
 ## Level 1 acceptance checklist
 
-Status is **Not Run** until the check is executed and evidence is recorded. Implementation alone does not count as a pass.
+Mark a check as passed only after executing it and recording evidence. Implementation alone does not count as a pass.
 
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
-| L1-01 | Register at phone viewport; ticket page displays QR | Not Run | Dependencies and database not set up |
+| L1-01 | Register at phone viewport; ticket page displays QR | Not Run | Mobile registration flow not exercised |
 | L1-02 | Scan QR with a phone QR reader; decoded content equals ticket code | Not Run | — |
 | L1-03 | Refresh and retrieve ticket with correct code and email | Not Run | — |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Not Run | — |
 | L1-05 | Same email cannot register twice for one event | Not Run | — |
 | L1-06 | Invalid email and 10-digit mobile show field-level errors | Not Run | — |
-| L1-07 | Seeded full event is shown as full and registration is unavailable | Not Run | — |
-| L1-08 | Staff URL while logged out is redirected or blocked server-side | Not Run | — |
+| L1-07 | Seeded full event is shown as full and registration is unavailable | Pass | Production page showed Fully booked; event details showed Registration is full without the form |
+| L1-08 | Staff URL while logged out is redirected or blocked server-side | Pass | Unauthenticated `/staff` returned HTTP 307 to staff sign-in |
 | L1-09 | Valid check-in reports Checked in and attendee name | Not Run | — |
 | L1-10 | Repeated scan reports Already checked in with original time | Not Run | — |
 | L1-11 | Made-up/other-event ticket is invalid; attendee list and totals are correct | Not Run | — |
@@ -83,10 +83,10 @@ The project plan recommends Next.js + TypeScript, PostgreSQL, Prisma, Auth.js Cr
    npm.cmd run db:generate
    ```
 
-4. Apply the migration and seed local demo data:
+4. Apply the committed migrations and seed demo data:
 
    ```powershell
-   npm.cmd run db:migrate
+   npm.cmd exec -- prisma migrate deploy
    npm.cmd run db:seed
    ```
 
@@ -116,8 +116,12 @@ Verified in the current workspace:
 - `npm.cmd run lint` — passed with no warnings.
 - `npm.cmd test` — passed (1 test file, 3 tests).
 - `npm.cmd run build` — passed.
+- `npm.cmd exec -- prisma migrate status` — passed; database schema is up to date.
+- `npm.cmd exec -- prisma migrate deploy` — passed; initial migration applied.
+- `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
+- Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
 
-The local `.env` now contains a PostgreSQL connection string, but no database connection, migration, or seed has been run. Database integration behavior and the Level 1 acceptance checklist remain unverified.
+Database connection and initial setup are verified. The remaining Level 1 checks are not yet run, including registration transactions, ticket lookup privacy, QR decoding, and check-in persistence.
 
 ## Data model
 
@@ -129,8 +133,7 @@ The database migration enforces valid event schedules and positive capacity. A p
 
 ## Known limitations and remaining work
 
-- Verify the configured PostgreSQL connection, apply migrations, and seed data.
-- Run database integration and all Level 1 acceptance checks; record actual evidence.
+- Run the remaining Level 1 acceptance checks and record actual evidence.
 - Add shared rate limiting for staff login, ticket lookup, and check-in before public deployment.
 - Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.
 - The QR ticket URL contains the unguessable ticket code and must be treated as sensitive.

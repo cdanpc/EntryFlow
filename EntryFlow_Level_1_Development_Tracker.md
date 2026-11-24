@@ -13,9 +13,9 @@ For each issue or change, add a short description, date, related phase, and curr
 
 - **Project:** EntryFlow — Event Registration and QR Check-in Management System
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
-- **Current phase:** Phase 7 — Level 1 verification and handoff (code checks pass; database verification pending)
+- **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; code checks pass, database-backed acceptance checks are pending
+- **Overall status:** In progress; code checks pass, 2 of 11 acceptance checks verified
 
 ## Phase 1 — Inspect and prepare
 
@@ -61,11 +61,11 @@ For each issue or change, add a short description, date, related phase, and curr
 
 ### Work items
 
-- [ ] Define Level 1 `events`, `registrations`, and `staff_users` schema.
-- [ ] Define relationships, constraints, and indexes.
-- [ ] Add database migrations.
-- [ ] Add repeatable seed data for at least two events, including one full event.
-- [ ] Add a demo staff account with a securely hashed password.
+- [x] Define Level 1 `events`, `registrations`, and `staff_users` schema.
+- [x] Define relationships, constraints, and indexes.
+- [x] Add database migrations. *(Initial migration applied to Supabase.)*
+- [x] Add repeatable seed data for at least two events, including one full event. *(Verified three events.)*
+- [x] Add a demo staff account with a securely hashed password. *(One Organizer account seeded.)*
 - [ ] Establish shared server-side validation and error handling.
 - [ ] Establish structured logging that avoids sensitive information.
 - [ ] Establish design tokens for colors, typography, spacing, borders, and states.
@@ -75,7 +75,7 @@ For each issue or change, add a short description, date, related phase, and curr
 
 - [ ] A fresh local setup can migrate and seed the database.
 - [ ] Data integrity and server-side validation rules are documented.
-- [ ] Secrets are managed outside source control.
+- [x] Secrets are managed outside source control. *(`.env` is gitignored and untracked.)*
 
 ### Bugs
 
@@ -98,7 +98,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Added Next.js/TypeScript project configuration, PostgreSQL/Prisma models and migration, `.env.example`, and a seed script for two upcoming events plus a full event. The demo password must be supplied through `DEMO_STAFF_PASSWORD` and is stored as a bcrypt hash.
-- Added a shared Prisma client and initial design tokens. Clean npm install and Prisma Client generation succeeded. A local `.env` has since been configured; migration, seed, and database connection have not been run or verified.
+- Added a shared Prisma client and initial design tokens. Prisma Client generation succeeded. The initial migration was applied with `prisma migrate deploy`; the seed script created three events and one Organizer. Read-only verification confirmed Cebu Dev Meetup 2026 has 0/30 spots occupied, Product Design Exchange 0/60, and Community Tech Forum 1/1 (full).
 
 ## Phase 3 — Event discovery and registration
 
@@ -195,14 +195,14 @@ For each issue or change, add a short description, date, related phase, and curr
 - Added Auth.js Credentials sign-in using bcrypt verification and an eight-hour encrypted JWT session. Staff dashboard access is checked server-side.
 - Added manual ticket-code check-in. It verifies event selection, confirmed status, and the Asia/Manila event date, then uses a conditional atomic update so only one concurrent scan is the first check-in; subsequent scans return the original timestamp.
 - Added basic response security headers. Login and check-in rate limiting remains outstanding.
-- Staff sign-in and check-in have not been run against a configured database.
+- Staff sign-in page and logged-out access redirect were smoke-checked; actual sign-in and check-in transactions have not been tested.
 
 ## Phase 6 — Attendee list and attendance totals
 
 ### Development notes
 
 - Added an Organizer-only attendee list with name/code search, 50-row pagination, contact details, ticket status, and registration time. Door Staff sees check-in but not attendee contact records.
-- Added registered/capacity, checked-in, and waitlisted counters. These queries have not been verified against seeded data.
+- Added registered/capacity, checked-in, and waitlisted counters. Seeded event capacities were verified; attendee-specific counters remain unverified.
 
 ## Phase 5 — Staff sign-in and manual check-in
 
@@ -315,8 +315,8 @@ For each issue or change, add a short description, date, related phase, and curr
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Not Run | — |
 | L1-05 Same email on same event | Second active registration rejected | Not Run | — |
 | L1-06 Invalid email and 10-digit phone | Field-level validation errors | Not Run | — |
-| L1-07 Seeded full event | Full shown; registration unavailable | Not Run | — |
-| L1-08 Staff URL while logged out | Server redirects or blocks access | Not Run | — |
+| L1-07 Seeded full event | Full shown; registration unavailable | Pass | Production HTTP check: event card shows Fully booked; detail page shows Registration is full and omits registration form. |
+| L1-08 Staff URL while logged out | Server redirects or blocks access | Pass | Production HTTP check: `/staff` returns 307 to sign-in without a session. |
 | L1-09 Valid check-in | Checked in plus attendee name | Not Run | — |
 | L1-10 Same code scanned again | Already checked in plus original time | Not Run | — |
 | L1-11 Made-up/other-event code and attendee totals | Invalid ticket; list and counts correct | Not Run | — |
@@ -354,7 +354,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Add shared rate limits for ticket lookup, staff sign-in, and check-in before public deployment. | High | Open | Select a shared store suitable for the deployment target. |
-| I-002 | All | Verification | Verify PostgreSQL connectivity, apply migration, seed data, and execute database-backed Level 1 acceptance checks. | High | Open | Prisma Client generation, typecheck, lint, 3 unit tests, and production build pass. Local `.env` configured; database connection not tested. |
+| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, ticket privacy, QR decoding, and check-in persistence. | High | Open | Migration and seed are complete; 2 of 11 acceptance checks pass. |
 
 ### Revised
 
@@ -367,4 +367,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 | Date | Phase | Work completed / decision | References / evidence |
 |---|---|---|---|
 | 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |
-| 2026-11-24 | Phase 7 | Added the supplied PostgreSQL connection to the ignored local `.env` and generated a local Auth.js secret. Prisma config now loads `.env` for CLI commands. No database connection or migration was run. | `.env` is gitignored; source/config changes need push |
+| 2026-11-24 | Phase 7 | Applied the initial Prisma migration and seeded three events plus one Organizer in Supabase. Generated a local demo password stored only in ignored `.env`. Added `AUTH_TRUST_HOST` for local/reverse-proxy operation. Production smoke checks verified full-event messaging and unauthenticated staff redirect; 2 of 11 acceptance checks pass. | `npm run db:seed` output, migration status, local production HTTP checks; `.env` remains gitignored |
