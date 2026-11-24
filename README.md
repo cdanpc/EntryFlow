@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, and production build pass. Database-backed acceptance checks have not run because PostgreSQL is not configured, so no Level 1 checks are marked as passed. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, and production build pass. A local PostgreSQL connection string is configured, but the database connection, migration, and acceptance checks have not yet been run. No Level 1 checks are marked as passed, and no public deployment is available yet.
 
 ## Assessment details
 
@@ -117,7 +117,7 @@ Verified in the current workspace:
 - `npm.cmd test` — passed (1 test file, 3 tests).
 - `npm.cmd run build` — passed.
 
-The migration and seed have not run because a PostgreSQL database URL has not been configured. Database integration behavior and the Level 1 acceptance checklist remain unverified.
+The local `.env` now contains a PostgreSQL connection string, but no database connection, migration, or seed has been run. Database integration behavior and the Level 1 acceptance checklist remain unverified.
 
 ## Data model
 
@@ -129,7 +129,7 @@ The database migration enforces valid event schedules and positive capacity. A p
 
 ## Known limitations and remaining work
 
-- Configure PostgreSQL, apply migrations, and seed data.
+- Verify the configured PostgreSQL connection, apply migrations, and seed data.
 - Run database integration and all Level 1 acceptance checks; record actual evidence.
 - Add shared rate limiting for staff login, ticket lookup, and check-in before public deployment.
 - Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.

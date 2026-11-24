@@ -98,7 +98,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Added Next.js/TypeScript project configuration, PostgreSQL/Prisma models and migration, `.env.example`, and a seed script for two upcoming events plus a full event. The demo password must be supplied through `DEMO_STAFF_PASSWORD` and is stored as a bcrypt hash.
-- Added a shared Prisma client and initial design tokens. Clean npm install and Prisma Client generation succeeded. Migration, seed, and database connection have not been run or verified.
+- Added a shared Prisma client and initial design tokens. Clean npm install and Prisma Client generation succeeded. A local `.env` has since been configured; migration, seed, and database connection have not been run or verified.
 
 ## Phase 3 — Event discovery and registration
 
@@ -354,7 +354,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Add shared rate limits for ticket lookup, staff sign-in, and check-in before public deployment. | High | Open | Select a shared store suitable for the deployment target. |
-| I-002 | All | Verification | Configure PostgreSQL, apply migration, seed data, and execute database-backed Level 1 acceptance checks. | High | Open | Prisma Client generation, typecheck, lint, 3 unit tests, and production build pass. No database URL is configured. |
+| I-002 | All | Verification | Verify PostgreSQL connectivity, apply migration, seed data, and execute database-backed Level 1 acceptance checks. | High | Open | Prisma Client generation, typecheck, lint, 3 unit tests, and production build pass. Local `.env` configured; database connection not tested. |
 
 ### Revised
 
@@ -367,3 +367,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 | Date | Phase | Work completed / decision | References / evidence |
 |---|---|---|---|
 | 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |
+| 2026-11-24 | Phase 7 | Added the supplied PostgreSQL connection to the ignored local `.env` and generated a local Auth.js secret. Prisma config now loads `.env` for CLI commands. No database connection or migration was run. | `.env` is gitignored; source/config changes need push |
