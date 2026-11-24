@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
-        if (token.staffId && (token.role === StaffRole.ORGANIZER || token.role === StaffRole.DOOR_STAFF)) {
+        if (typeof token.staffId === "string" && (token.role === StaffRole.ORGANIZER || token.role === StaffRole.DOOR_STAFF)) {
           session.user.role = token.role;
           session.user.staffId = token.staffId;
         }

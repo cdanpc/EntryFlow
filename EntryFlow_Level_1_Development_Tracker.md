@@ -13,9 +13,9 @@ For each issue or change, add a short description, date, related phase, and curr
 
 - **Project:** EntryFlow — Event Registration and QR Check-in Management System
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
-- **Current phase:** Phase 7 — Level 1 verification and handoff (implementation is ready for dependency/database setup; verification pending)
+- **Current phase:** Phase 7 — Level 1 verification and handoff (code checks pass; database verification pending)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; runtime checks are blocked until dependencies are installed
+- **Overall status:** In progress; code checks pass, database-backed acceptance checks are pending
 
 ## Phase 1 — Inspect and prepare
 
@@ -55,7 +55,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Initial workspace contained the project DOCX, saved development standards, and tracker; no application source files or frontend demo were present.
-- Node.js 22.19.0 and npm 11.12.1 are available. `node_modules` and `package-lock.json` are absent. `npm.cmd` works, but typecheck and test commands cannot run because `tsc` and `vitest` are not installed.
+- Node.js 22.19.0 and npm 11.12.1 are available. The initial workspace had no `node_modules` or lockfile; a clean dependency install later completed and created `package-lock.json`.
 
 ## Phase 2 — Design data and app foundation
 
@@ -98,7 +98,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Added Next.js/TypeScript project configuration, PostgreSQL/Prisma models and migration, `.env.example`, and a seed script for two upcoming events plus a full event. The demo password must be supplied through `DEMO_STAFF_PASSWORD` and is stored as a bcrypt hash.
-- Added a shared Prisma client and initial design tokens. Dependency installation, migration, seed, and database connection have not been run or verified.
+- Added a shared Prisma client and initial design tokens. Clean npm install and Prisma Client generation succeeded. Migration, seed, and database connection have not been run or verified.
 
 ## Phase 3 — Event discovery and registration
 
@@ -144,7 +144,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Implemented public event list/details and a three-field registration form. The server action validates input, normalizes email, locks the event row in a serializable transaction, checks duplicate active registration and current capacity, and creates a 32-byte random ticket code.
-- Added unit tests for registration input validation. Tests are written but not run because dependencies are not installed.
+- Added unit tests for registration input validation; all 3 tests pass.
 - Registration and capacity behavior has not been verified against PostgreSQL; exit-gate checks remain unchecked.
 
 ## Phase 4 — QR ticket and ticket retrieval
@@ -354,7 +354,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Add shared rate limits for ticket lookup, staff sign-in, and check-in before public deployment. | High | Open | Select a shared store suitable for the deployment target. |
-| I-002 | All | Verification | Install dependencies, generate Prisma client, configure PostgreSQL, and run typecheck/lint/tests/build. | High | Blocked by environment setup | Initial npm install attempt did not create `node_modules` or lockfile. |
+| I-002 | All | Verification | Configure PostgreSQL, apply migration, seed data, and execute database-backed Level 1 acceptance checks. | High | Open | Prisma Client generation, typecheck, lint, 3 unit tests, and production build pass. No database URL is configured. |
 
 ### Revised
 
@@ -366,4 +366,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 | Date | Phase | Work completed / decision | References / evidence |
 |---|---|---|---|
-| 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Typecheck and test commands could not start because `tsc` and `vitest` are not installed. A dependency install was attempted but did not create `node_modules` or a lockfile. No database migration or app build has been run. | Source files in workspace; command outputs in development session |
+| 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |

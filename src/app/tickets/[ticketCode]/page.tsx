@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
 import { notFound } from "next/navigation";
@@ -28,7 +29,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
         <h1>{ticket.event.title}</h1>
         <p className="ticket-datetime">{formatCebuDateRange(ticket.event.startsAt, ticket.event.endsAt)}</p>
         <div className="ticket-divider" />
-        <div className="ticket-body"><div className="ticket-attendee"><span className="eyebrow muted">ATTENDEE</span><strong>{ticket.fullName}</strong><span>{ticket.event.venue}</span></div><div className="ticket-qr"><img src={qrData} width="192" height="192" alt={`QR ticket for ${ticket.event.title}`} /><span>Show this QR code at the entrance</span></div></div>
+        <div className="ticket-body"><div className="ticket-attendee"><span className="eyebrow muted">ATTENDEE</span><strong>{ticket.fullName}</strong><span>{ticket.event.venue}</span></div><div className="ticket-qr"><Image src={qrData} width={192} height={192} alt={`QR ticket for ${ticket.event.title}`} unoptimized /><span>Show this QR code at the entrance</span></div></div>
         <div className="ticket-code"><span className="eyebrow muted">TICKET CODE</span><code>{ticket.ticketCode}</code></div>
         <p className="ticket-help">Keep this page available when you arrive. You can also find your ticket again with your ticket code and registration email or mobile.</p>
         <Link className="lookup-back" href="/tickets">Find another ticket</Link>

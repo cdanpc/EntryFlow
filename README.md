@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. The application code has not yet been run against an installed dependency set and PostgreSQL database, so no acceptance checks are marked as passed. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, and production build pass. Database-backed acceptance checks have not run because PostgreSQL is not configured, so no Level 1 checks are marked as passed. No public deployment is available yet.
 
 ## Assessment details
 
@@ -26,7 +26,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Staff check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
 - Basic security response headers and no-store caching for staff and ticket pages.
-- Unit tests for registration input validation (written, not run).
+- Unit tests for registration input validation (3 tests passing).
 
 ## Level 1 acceptance checklist
 
@@ -79,7 +79,7 @@ The project plan recommends Next.js + TypeScript, PostgreSQL, Prisma, Auth.js Cr
 3. Install packages and generate the Prisma client:
 
    ```powershell
-   npm.cmd install
+   npm.cmd ci
    npm.cmd run db:generate
    ```
 
@@ -109,7 +109,15 @@ npm.cmd test
 npm.cmd run build
 ```
 
-The current workspace has not completed dependency installation. Typecheck and test commands were attempted and could not start because `tsc` and `vitest` were unavailable. Migration, seed, and build are also unverified.
+Verified in the current workspace:
+
+- `npm.cmd run db:generate` — passed.
+- `npm.cmd run typecheck` — passed.
+- `npm.cmd run lint` — passed with no warnings.
+- `npm.cmd test` — passed (1 test file, 3 tests).
+- `npm.cmd run build` — passed.
+
+The migration and seed have not run because a PostgreSQL database URL has not been configured. Database integration behavior and the Level 1 acceptance checklist remain unverified.
 
 ## Data model
 
@@ -121,8 +129,8 @@ The database migration enforces valid event schedules and positive capacity. A p
 
 ## Known limitations and remaining work
 
-- Install dependencies, create/configure PostgreSQL, generate Prisma Client, apply migrations, and seed data.
-- Run typecheck, lint, unit tests, build, then all Level 1 acceptance checks; record actual evidence.
+- Configure PostgreSQL, apply migrations, and seed data.
+- Run database integration and all Level 1 acceptance checks; record actual evidence.
 - Add shared rate limiting for staff login, ticket lookup, and check-in before public deployment.
 - Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.
 - The QR ticket URL contains the unguessable ticket code and must be treated as sensitive.
