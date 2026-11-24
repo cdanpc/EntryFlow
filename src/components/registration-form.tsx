@@ -14,12 +14,12 @@ export function RegistrationForm({ eventId }: { eventId: string }) {
       {state.message && <p className="form-alert" role="alert">{state.message}</p>}
       <div className="field">
         <label htmlFor="fullName">Full name</label>
-        <input id="fullName" name="fullName" autoComplete="name" maxLength={120} required aria-invalid={Boolean(state.errors.fullName)} aria-describedby={state.errors.fullName ? "fullName-error" : undefined} />
+        <input id="fullName" name="fullName" autoComplete="name" placeholder="e.g. Alex Rivera" maxLength={120} required aria-invalid={Boolean(state.errors.fullName)} aria-describedby={state.errors.fullName ? "fullName-error" : undefined} />
         {state.errors.fullName && <span className="field-error" id="fullName-error">{state.errors.fullName}</span>}
       </div>
       <div className="field">
         <label htmlFor="email">Email address</label>
-        <input id="email" name="email" type="email" autoComplete="email" maxLength={254} required aria-invalid={Boolean(state.errors.email)} aria-describedby={state.errors.email ? "email-error" : undefined} />
+        <input id="email" name="email" type="email" autoComplete="email" placeholder="e.g. alex@example.com" maxLength={254} required aria-invalid={Boolean(state.errors.email)} aria-describedby={state.errors.email ? "email-error" : undefined} />
         {state.errors.email && <span className="field-error" id="email-error">{state.errors.email}</span>}
       </div>
       <div className="field">
