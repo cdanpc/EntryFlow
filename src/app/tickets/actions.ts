@@ -28,6 +28,7 @@ export async function findTicket(_state: TicketLookupState, formData: FormData):
     return { message: "Ticket not found. Check the details and try again." };
   }
 
+  let resolvedTicketCode = "";
   try {
     const ticket = await prisma.registration.findFirst({
       where: {
@@ -39,10 +40,11 @@ export async function findTicket(_state: TicketLookupState, formData: FormData):
       select: { ticketCode: true },
     });
     if (!ticket) return { message: "Ticket not found. Check the details and try again." };
+    resolvedTicketCode = ticket.ticketCode;
   } catch (error) {
     console.error("EntryFlow ticket lookup failed", { errorType: error instanceof Error ? error.name : "UnknownError" });
     return { message: "Ticket not found. Check the details and try again." };
   }
 
-  redirect(`/tickets/${ticket.ticketCode}`);
+  redirect(`/tickets/${resolvedTicketCode}`);
 }

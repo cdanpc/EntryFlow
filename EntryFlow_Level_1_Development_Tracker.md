@@ -348,7 +348,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 | ID | Phase | Description | Severity | Status | Date found | Resolution / notes |
 |---|---|---|---|---|---|---|
-| B-001 | Deploy | Vercel typecheck used a Prisma Client without the new `manualCode` field. | High | Fixed | 2026-11-24 | `postinstall` and `build` now regenerate Prisma Client; deployment build still needs rechecking. |
+| B-001 | Deploy | Vercel typecheck used a Prisma Client without the new `manualCode` field. | High | Fixed | 2026-11-24 | Latest Vercel logs confirm `postinstall` generated the updated Prisma Client. |
+| B-002 | Deploy | Vercel typecheck found `ticket` out of scope in the ticket lookup action after Prisma generation succeeded. | High | Fixed | 2026-11-24 | Store the resolved ticket code outside the `try` block; local typecheck and production build pass. Latest fix still needs a Vercel rebuild. |
 
 ### Needs improvement
 
@@ -356,7 +357,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Verify trusted client-address headers on the final deployment target. | High | Open | PostgreSQL-backed shared limits are implemented and migrated; host proxy must set/overwrite `x-real-ip` or trusted `x-forwarded-for`. |
 | I-002 | All | Verification | Complete the remaining phone QR scan and review concurrency and role-based data access. | High | Open | The short-code revision also requires rechecking L1-03; 9 of 11 checks are currently verified. |
-| I-003 | 4–6 | Short ticket codes | Acceptance-test short-code lookup, staff check-in, attendee list display, and legacy QR-secret handling. | High | Open | Migration `202611240003_manual_ticket_codes` is applied; implementation is not yet typechecked or manually verified. |
+| I-003 | 4–6 | Short ticket codes | Acceptance-test short-code lookup, staff check-in, attendee list display, and legacy QR-secret handling. | High | Open | Migration `202611240003_manual_ticket_codes` is applied; typecheck and production build pass, but short-code behavior is not yet manually verified. |
 
 ### Revised
 
@@ -374,5 +375,6 @@ Use this log for items that affect multiple phases or need a single project-wide
 | 2026-11-24 | Phase 7 | Refreshed a confirmed ticket page and verified the QR remained visible; invalid email and a 10-digit mobile produced separate field-level errors. Removed the temporary test registration and confirmed zero matching rows remained. Total: 6 of 11 checks pass. | Local production browser on `127.0.0.1:3100`; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phases 2, 4–5 | Added a PostgreSQL-backed atomic rate-limit bucket table and wired it into ticket lookup, staff authentication, and check-in. Applied migration `202611240002_rate_limit_buckets`; threshold smoke check allowed two requests and denied the third, then removed its test bucket. Typecheck, lint, and production build passed. | Prisma migration output; temporary smoke script output; no raw client addresses or test subjects stored |
 | 2026-11-24 | Phases 4–6 | Added unique six-character manual ticket codes while preserving the separate long QR secret. Ticket lookup requires the manual code plus matching contact; staff check-in accepts either code; attendee views show the short code. Generated Prisma Client and applied `202611240003_manual_ticket_codes` to backfill existing registrations. Revised flows are not acceptance-tested yet. | Prisma Client generation and migration deployment output; short-code acceptance checks remain open |
+| 2026-11-24 | Deploy | Inspected Vercel build for `02b2730`; Prisma Client generation succeeded, then TypeScript reported `ticket` out of scope in `src/app/tickets/actions.ts`. Moved the resolved ticket code outside the `try` block. Local `npm.cmd run typecheck` and `npm.cmd run build` both pass; pushed fix is awaiting a new Vercel build. | Vercel build logs and local typecheck/production build output |
 | 2026-11-24 | Phase 7 | Completed registration at 360px emulated mobile viewport and confirmed the QR ticket was visible with no horizontal page overflow. Removed the temporary registration; database count confirmed zero matching records. Total: 7 of 11 checks pass. | Local production browser, Chrome responsive viewport set to 360px; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phase 7 | Used the seeded Organizer account in the local browser. Verified valid check-in, repeat scan with the original time, made-up code rejection, attendee status, and totals. Removed the temporary attendee and same-day event; database cleanup confirmed one registration and one event removed with zero remaining fixture registrations. Signed out and dismissed Chrome's save-password prompt without saving. Total: 10 of 11 acceptance checks pass. | Local production browser and Supabase cleanup script; credential and ticket code omitted |

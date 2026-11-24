@@ -4,7 +4,7 @@ Event Registration and QR Check-in Management System for the CubeTech intern act
 
 > **Assessment status:** Level 1 implementation in progress. Ten of eleven checks had passed before the short-code revision; one lookup check is now marked Not Run until retested with the new six-character code, and the phone QR scan remains untested. No public deployment is available yet.
 
-> **Latest change:** The six-character manual-code migration and Prisma Client generation are complete. The new short-code registration, lookup, and check-in paths have not yet been acceptance-tested or typechecked.
+> **Latest change:** The short-code changes and Vercel build fix pass local typechecking and production build. Short-code acceptance checks are still pending, and Vercel must rebuild the latest fix before deployment can be confirmed.
 
 ## Assessment details
 
@@ -126,6 +126,7 @@ Verified in the current workspace:
 - `npm.cmd exec -- prisma migrate deploy` — passed; PostgreSQL rate-limit bucket migration applied.
 - `npm.cmd run db:generate` — passed after adding the manual ticket code field.
 - `npm.cmd exec -- prisma migrate deploy` — passed; manual codes were backfilled and the unique constraint applied.
+- Latest short-code revision — `npm.cmd run typecheck` and `npm.cmd run build` passed after fixing the Vercel-reported ticket lookup scope error. Unit and acceptance tests for short-code behavior remain pending.
 - `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
 - Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
 - Local production browser acceptance checks — successful registration displayed a confirmed ticket and QR; matching email retrieved it; a mismatched contact showed a generic not-found message; duplicate registration was rejected. The disposable registration was deleted and its absence confirmed.
