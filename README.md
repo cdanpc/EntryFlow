@@ -2,7 +2,9 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Ten of the eleven Level 1 acceptance checks are verified; the remaining phone QR scan is untested. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Ten of eleven checks had passed before the short-code revision; one lookup check is now marked Not Run until retested with the new six-character code, and the phone QR scan remains untested. No public deployment is available yet.
+
+> **Latest change:** The six-character manual-code migration and Prisma Client generation are complete. The new short-code registration, lookup, and check-in paths have not yet been acceptance-tested or typechecked.
 
 ## Assessment details
 
@@ -21,7 +23,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Guest registration form with server-side name, email, and Philippine mobile validation.
 - PostgreSQL/Prisma data model, migration, and demo seed data for two events and one full event.
 - Duplicate active registration prevention and a transaction that locks the event while checking capacity.
-- Cryptographically random ticket codes, QR ticket view, and ticket lookup by code plus matching email or mobile.
+- A six-character, database-unique manual ticket code plus a separate cryptographically random QR and ticket-URL secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code or QR secret.
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
 - Staff check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
@@ -36,8 +38,8 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
-| L1-02 | Scan QR with a phone QR reader; decoded content equals ticket code | Not Run | — |
-| L1-03 | Refresh and retrieve ticket with correct code and email | Pass | Matching-contact lookup returned the ticket and QR; refreshing its ticket URL kept the same confirmed ticket and QR visible. |
+| L1-02 | Scan QR with a phone QR reader; decoded secret is accepted for check-in | Not Run | — |
+| L1-03 | Refresh and retrieve ticket with six-character code and email | Not Run | Previous lookup verification used the former long code; recheck the new manual-code flow. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
 | L1-06 | Invalid email and 10-digit mobile show field-level errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
@@ -120,6 +122,8 @@ Verified in the current workspace:
 - `npm.cmd exec -- prisma migrate status` — passed; database schema is up to date.
 - `npm.cmd exec -- prisma migrate deploy` — passed; initial migration applied.
 - `npm.cmd exec -- prisma migrate deploy` — passed; PostgreSQL rate-limit bucket migration applied.
+- `npm.cmd run db:generate` — passed after adding the manual ticket code field.
+- `npm.cmd exec -- prisma migrate deploy` — passed; manual codes were backfilled and the unique constraint applied.
 - `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
 - Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
 - Local production browser acceptance checks — successful registration displayed a confirmed ticket and QR; matching email retrieved it; a mismatched contact showed a generic not-found message; duplicate registration was rejected. The disposable registration was deleted and its absence confirmed.
@@ -133,7 +137,7 @@ Database connection and initial setup are verified. The only remaining Level 1 a
 ## Data model
 
 - `events`: published events, venue, schedule, capacity, and status.
-- `registrations`: attendee details, normalized email, unique ticket code, status, and check-in fields.
+- `registrations`: attendee details, normalized email, a unique six-character manual code, a separate unique QR secret, status, and check-in fields.
 - `staff_users`: username, bcrypt password hash, and role.
 
 The database migration enforces valid event schedules and positive capacity. A partial unique index prevents more than one active registration for the same normalized email and event. Registration checks current capacity within a transaction while locking the event row.
@@ -144,6 +148,7 @@ The database migration enforces valid event schedules and positive capacity. A p
 - Configure the deployment proxy to overwrite and provide a trusted `x-real-ip` header (or trusted `x-forwarded-for`) so address-based rate limits use the actual client address; verify the chosen host's behavior before public launch.
 - Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.
 - The QR ticket URL contains the unguessable ticket code and must be treated as sensitive.
+- The six-character manual code is not the QR bearer secret. Public ticket retrieval also requires the registered email or mobile; staff check-in requires an authenticated staff session and selected event.
 - Current limits: ticket lookup 60 per address per 15 minutes; staff sign-in 30 per address and 10 per username per 15 minutes; check-in 120 per staff member per minute.
 - No deployment URL exists yet. Publish only after verification, then add the HTTPS URL here.
 - Level 2 and Level 3 have not been started.

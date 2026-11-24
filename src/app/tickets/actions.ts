@@ -17,19 +17,24 @@ export async function findTicket(_state: TicketLookupState, formData: FormData):
     return { message: "Ticket lookup is temporarily unavailable. Please try again." };
   }
 
-  const ticketCode = String(formData.get("ticketCode") ?? "").trim();
+  const enteredCode = String(formData.get("ticketCode") ?? "").trim();
+  const manualCode = enteredCode.toUpperCase();
   const contact = String(formData.get("contact") ?? "").trim();
   const email = contact.toLowerCase();
 
-  if (!/^[A-Za-z0-9_-]{32,64}$/.test(ticketCode) || contact.length < 5 || contact.length > 254) {
+  const isManualCode = /^[0-9A-HJKMNP-TV-Z]{6}$/.test(manualCode);
+  const isQrCode = /^[A-Za-z0-9_-]{32,64}$/.test(enteredCode);
+  if ((!isManualCode && !isQrCode) || contact.length < 5 || contact.length > 254) {
     return { message: "Ticket not found. Check the details and try again." };
   }
 
   try {
     const ticket = await prisma.registration.findFirst({
       where: {
-        ticketCode,
-        OR: [{ normalizedEmail: email }, { mobile: contact }],
+        AND: [
+          { OR: [{ manualCode }, { ticketCode: enteredCode }] },
+          { OR: [{ normalizedEmail: email }, { mobile: contact }] },
+        ],
       },
       select: { ticketCode: true },
     });
@@ -39,5 +44,5 @@ export async function findTicket(_state: TicketLookupState, formData: FormData):
     return { message: "Ticket not found. Check the details and try again." };
   }
 
-  redirect(`/tickets/${ticketCode}`);
+  redirect(`/tickets/${ticket.ticketCode}`);
 }

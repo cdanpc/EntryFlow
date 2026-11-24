@@ -22,12 +22,15 @@ export async function checkInTicket(eventId: string, _state: CheckInState, formD
     return { kind: "error", message: "Check-in is temporarily unavailable. Try again." };
   }
 
-  const ticketCode = String(formData.get("ticketCode") ?? "").trim();
-  if (!/^[A-Za-z0-9_-]{32,64}$/.test(ticketCode)) return { kind: "invalid", message: "Invalid ticket. Check the code and selected event." };
+  const enteredCode = String(formData.get("ticketCode") ?? "").trim();
+  const manualCode = enteredCode.toUpperCase();
+  const isManualCode = /^[0-9A-HJKMNP-TV-Z]{6}$/.test(manualCode);
+  const isQrCode = /^[A-Za-z0-9_-]{32,64}$/.test(enteredCode);
+  if (!isManualCode && !isQrCode) return { kind: "invalid", message: "Invalid ticket. Check the code and selected event." };
 
   try {
     const ticket = await prisma.registration.findFirst({
-      where: { ticketCode, eventId },
+      where: { eventId, OR: [{ manualCode }, { ticketCode: enteredCode }] },
       select: { id: true, fullName: true, status: true, checkedInAt: true, event: { select: { startsAt: true } } },
     });
     if (!ticket) return { kind: "invalid", message: "Invalid ticket. Check the code and selected event." };

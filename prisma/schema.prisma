@@ -50,6 +50,7 @@ model Registration {
   normalizedEmail String           @map("normalized_email")
   mobile       String
   ticketCode   String             @unique @map("ticket_code")
+  manualCode   String             @unique @map("manual_code") @db.VarChar(6)
   status       RegistrationStatus @default(CONFIRMED)
   registeredAt DateTime           @default(now()) @map("registered_at") @db.Timestamptz(3)
   checkedInAt  DateTime?          @map("checked_in_at") @db.Timestamptz(3)

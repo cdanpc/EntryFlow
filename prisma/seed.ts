@@ -72,6 +72,7 @@ async function main() {
       normalizedEmail: "full-event@example.test",
       mobile: "09170000001",
       ticketCode: "DEMO-FULL-0001",
+      manualCode: "DEM801",
     },
   });
 

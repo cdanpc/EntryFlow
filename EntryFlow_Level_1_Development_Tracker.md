@@ -15,7 +15,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
 - **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; code checks pass, 10 of 11 acceptance checks verified
+- **Overall status:** In progress; 9 of 11 acceptance checks currently verified, with short-code lookup and phone QR scan still unverified
 
 ## Phase 1 — Inspect and prepare
 
@@ -151,10 +151,10 @@ For each issue or change, add a short description, date, related phase, and curr
 
 ### Work items
 
-- [ ] Generate a unique, unpredictable ticket code after successful registration.
+- [x] Generate a unique, unpredictable QR ticket secret and six-character manual code after successful registration. *(Database uniqueness is enforced; short-code flow still needs acceptance testing.)*
 - [ ] Display attendee name and event details on the ticket page.
 - [ ] Generate a QR code containing the ticket code.
-- [ ] Build ticket lookup using ticket code plus matching email or mobile.
+- [x] Build ticket lookup using the six-character code plus matching email or mobile. *(The prior lookup used the former long code; verify the revised short-code flow.)*
 - [ ] Return a generic not-found response for invalid lookup combinations.
 - [ ] Ensure failed lookups do not reveal personal or ticket information.
 - [x] Apply appropriate rate limits to ticket lookup. *(PostgreSQL-backed per-address bucket; threshold behavior smoke-checked.)*
@@ -181,12 +181,13 @@ For each issue or change, add a short description, date, related phase, and curr
 
 | Date | Item revised | Previous behavior / decision | Revised behavior / decision | Reason |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| 2026-11-24 | Ticket identifiers | One long ticket code was shown, typed for lookup, encoded in QR, and used in the ticket URL. | Show a unique six-character manual code; retain the 256-bit secret for QR and private ticket URL. Lookup requires a matching attendee contact; staff may check in with either code. | Make manual entry easier while preserving the QR bearer secret. |
 
 ### Development notes
 
 - Implemented ticket lookup requiring a ticket code plus matching email or mobile, with a generic mismatch response. Added a QR ticket page with attendee/event details and print styles.
 - The ticket URL contains the unguessable ticket code and is sensitive. PostgreSQL-backed rate limiting is implemented; deployment proxy address headers still need verification.
+- Revised ticket identifiers: the attendee-facing manual code is six Crockford-style characters; the QR and ticket URL retain a separate 256-bit secret. Public lookup requires a matching contact, and authenticated staff can check in by either code. Migration `202611240003_manual_ticket_codes` backfills existing records and enforces uniqueness; revised paths still need acceptance testing.
 
 ## Phase 5 — Staff sign-in and manual check-in
 
@@ -214,7 +215,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - [x] Protect staff pages and sensitive API operations on the server. *(Logged-out `/staff` redirect verified; check-in used an authenticated Organizer session.)*
 - [x] Document demo staff credentials safely for local development. *(README documents the environment variable, not its value.)*
 - [x] Build the event selector for staff. *(Selected the same-day test event.)*
-- [x] Build manual ticket-code entry with keyboard-scanner support. *(Manual ticket entry exercised.)*
+- [x] Build manual ticket-code entry with keyboard-scanner support. *(Long QR secret was exercised; short-code input still needs acceptance testing.)*
 - [x] Allow check-in only for an eligible confirmed ticket for the selected event on event day in Asia/Manila. *(Same-day confirmed ticket passed; invalid ticket rejected.)*
 - [x] Make check-in an atomic status transition. *(First scan checked in; later scan returned the existing state.)*
 - [x] Save the original check-in timestamp and staff member. *(Original timestamp remained on repeat; authenticated staff performed the transition.)*
@@ -251,7 +252,7 @@ For each issue or change, add a short description, date, related phase, and curr
 
 ### Work items
 
-- [x] Show attendee name, email, mobile, ticket code, registration time, and check-in status. *(Confirmed in the Organizer attendee list.)*
+- [x] Show attendee name, email, mobile, six-character manual ticket code, registration time, and check-in status. *(Short-code display still needs a database-backed page review.)*
 - [ ] Add search by attendee name or ticket code.
 - [x] Show registered/capacity totals. *(Temporary event showed 1/10.)*
 - [x] Show checked-in/registered totals. *(After check-in, temporary event showed 1/1.)*
@@ -310,8 +311,8 @@ For each issue or change, add a short description, date, related phase, and curr
 | Test | Expected result | Result (Pass / Fail / Not Run) | Evidence / notes |
 |---|---|---|---|
 | L1-01 Register on phone viewport | Ticket page appears with QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. Test attendee was removed afterward. |
-| L1-02 Scan QR with phone QR app | Decoded content equals ticket code | Not Run | — |
-| L1-03 Refresh and retrieve | Correct code and email return ticket | Pass | Matching-contact lookup returned the ticket and QR; refreshing its ticket URL kept the same confirmed ticket and QR visible. |
+| L1-02 Scan QR with phone QR app | Decoded QR secret is accepted by check-in | Not Run | — |
+| L1-03 Refresh and retrieve | Six-character code and email return ticket | Not Run | Prior verification used the former long code; retest the revised lookup flow. |
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
 | L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
 | L1-06 Invalid email and 10-digit phone | Field-level validation errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
@@ -354,13 +355,14 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Verify trusted client-address headers on the final deployment target. | High | Open | PostgreSQL-backed shared limits are implemented and migrated; host proxy must set/overwrite `x-real-ip` or trusted `x-forwarded-for`. |
-| I-002 | All | Verification | Complete the remaining phone QR scan and review concurrency and role-based data access. | High | Open | Migration and seed are complete; 10 of 11 acceptance checks pass. |
+| I-002 | All | Verification | Complete the remaining phone QR scan and review concurrency and role-based data access. | High | Open | The short-code revision also requires rechecking L1-03; 9 of 11 checks are currently verified. |
+| I-003 | 4–6 | Short ticket codes | Acceptance-test short-code lookup, staff check-in, attendee list display, and legacy QR-secret handling. | High | Open | Migration `202611240003_manual_ticket_codes` is applied; implementation is not yet typechecked or manually verified. |
 
 ### Revised
 
 | Date | Phase | Item revised | Previous behavior / decision | Revised behavior / decision | Reason |
 |---|---|---|---|---|---|
-| — | — | — | — | — | — |
+| 2026-11-24 | 4–6 | Ticket identifiers | One long ticket code served as the visible code, lookup value, QR payload, and ticket URL secret. | Separate the six-character manual code from the 256-bit QR and URL secret; lookup still requires the matching email or mobile. | Reduce typing while retaining an unguessable QR secret and contact-gated retrieval. |
 
 ## Development notes
 
@@ -371,5 +373,6 @@ Use this log for items that affect multiple phases or need a single project-wide
 | 2026-11-24 | Phase 7 | Local production browser verified successful registration and QR ticket display, matching-contact ticket retrieval, generic wrong-contact response, and duplicate-registration rejection. Removed the disposable test registration and confirmed no matching test row remained. Total: 4 of 11 full checks pass; L1-03 remains open because ticket-page refresh was not checked. | Browser acceptance flow on `127.0.0.1:3100`; exact test data and ticket code omitted; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phase 7 | Refreshed a confirmed ticket page and verified the QR remained visible; invalid email and a 10-digit mobile produced separate field-level errors. Removed the temporary test registration and confirmed zero matching rows remained. Total: 6 of 11 checks pass. | Local production browser on `127.0.0.1:3100`; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phases 2, 4–5 | Added a PostgreSQL-backed atomic rate-limit bucket table and wired it into ticket lookup, staff authentication, and check-in. Applied migration `202611240002_rate_limit_buckets`; threshold smoke check allowed two requests and denied the third, then removed its test bucket. Typecheck, lint, and production build passed. | Prisma migration output; temporary smoke script output; no raw client addresses or test subjects stored |
+| 2026-11-24 | Phases 4–6 | Added unique six-character manual ticket codes while preserving the separate long QR secret. Ticket lookup requires the manual code plus matching contact; staff check-in accepts either code; attendee views show the short code. Generated Prisma Client and applied `202611240003_manual_ticket_codes` to backfill existing registrations. Revised flows are not acceptance-tested yet. | Prisma Client generation and migration deployment output; short-code acceptance checks remain open |
 | 2026-11-24 | Phase 7 | Completed registration at 360px emulated mobile viewport and confirmed the QR ticket was visible with no horizontal page overflow. Removed the temporary registration; database count confirmed zero matching records. Total: 7 of 11 checks pass. | Local production browser, Chrome responsive viewport set to 360px; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phase 7 | Used the seeded Organizer account in the local browser. Verified valid check-in, repeat scan with the original time, made-up code rejection, attendee status, and totals. Removed the temporary attendee and same-day event; database cleanup confirmed one registration and one event removed with zero remaining fixture registrations. Signed out and dismissed Chrome's save-password prompt without saving. Total: 10 of 11 acceptance checks pass. | Local production browser and Supabase cleanup script; credential and ticket code omitted |
