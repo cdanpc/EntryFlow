@@ -93,6 +93,8 @@ The project plan recommends Next.js + TypeScript, PostgreSQL, Prisma, Auth.js Cr
    npm.cmd run db:seed
    ```
 
+The `postinstall` and `build` scripts regenerate Prisma Client from `prisma/schema.prisma`, so deployments include the current database fields before typechecking and production build.
+
 5. Start the development server:
 
    ```powershell

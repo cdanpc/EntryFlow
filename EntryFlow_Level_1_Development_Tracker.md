@@ -348,7 +348,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 | ID | Phase | Description | Severity | Status | Date found | Resolution / notes |
 |---|---|---|---|---|---|---|
-| — | — | None recorded | — | — | — | — |
+| B-001 | Deploy | Vercel typecheck used a Prisma Client without the new `manualCode` field. | High | Fixed | 2026-11-24 | `postinstall` and `build` now regenerate Prisma Client; deployment build still needs rechecking. |
 
 ### Needs improvement
 
