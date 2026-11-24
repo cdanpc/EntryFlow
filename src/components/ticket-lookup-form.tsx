@@ -11,7 +11,7 @@ export function TicketLookupForm() {
       {state.message && <p className="form-alert" role="alert">{state.message}</p>}
       <div className="field">
         <label htmlFor="ticketCode">Ticket code</label>
-        <input id="ticketCode" name="ticketCode" autoComplete="off" placeholder="e.g. K7M4P9" required maxLength={64} />
+        <input id="ticketCode" name="ticketCode" autoComplete="off" placeholder="e.g. ABC123" required maxLength={64} />
       </div>
       <div className="field">
         <label htmlFor="contact">Email or mobile number</label>
