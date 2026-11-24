@@ -15,7 +15,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
 - **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; code checks pass, 2 of 11 acceptance checks verified
+- **Overall status:** In progress; code checks pass, 4 of 11 acceptance checks verified
 
 ## Phase 1 — Inspect and prepare
 
@@ -311,9 +311,9 @@ For each issue or change, add a short description, date, related phase, and curr
 |---|---|---|---|
 | L1-01 Register on phone viewport | Ticket page appears with QR | Not Run | — |
 | L1-02 Scan QR with phone QR app | Decoded content equals ticket code | Not Run | — |
-| L1-03 Refresh and retrieve | Correct code and email return ticket | Not Run | — |
-| L1-04 Wrong code/contact combination | Ticket not found; no personal information | Not Run | — |
-| L1-05 Same email on same event | Second active registration rejected | Not Run | — |
+| L1-03 Refresh and retrieve | Correct code and email return ticket | Not Run | Matching-contact lookup returned the ticket and QR, but refreshing the ticket page was not checked. |
+| L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
+| L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
 | L1-06 Invalid email and 10-digit phone | Field-level validation errors | Not Run | — |
 | L1-07 Seeded full event | Full shown; registration unavailable | Pass | Production HTTP check: event card shows Fully booked; detail page shows Registration is full and omits registration form. |
 | L1-08 Staff URL while logged out | Server redirects or blocks access | Pass | Production HTTP check: `/staff` returns 307 to sign-in without a session. |
@@ -354,7 +354,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Add shared rate limits for ticket lookup, staff sign-in, and check-in before public deployment. | High | Open | Select a shared store suitable for the deployment target. |
-| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, ticket privacy, QR decoding, and check-in persistence. | High | Open | Migration and seed are complete; 2 of 11 acceptance checks pass. |
+| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, QR decoding, mobile, and check-in persistence. | High | Open | Migration and seed are complete; 4 of 11 acceptance checks pass. |
 
 ### Revised
 
@@ -368,3 +368,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 |---|---|---|---|
 | 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |
 | 2026-11-24 | Phase 7 | Applied the initial Prisma migration and seeded three events plus one Organizer in Supabase. Generated a local demo password stored only in ignored `.env`. Added `AUTH_TRUST_HOST` for local/reverse-proxy operation. Production smoke checks verified full-event messaging and unauthenticated staff redirect; 2 of 11 acceptance checks pass. | `npm run db:seed` output, migration status, local production HTTP checks; `.env` remains gitignored |
+| 2026-11-24 | Phase 7 | Local production browser verified successful registration and QR ticket display, matching-contact ticket retrieval, generic wrong-contact response, and duplicate-registration rejection. Removed the disposable test registration and confirmed no matching test row remained. Total: 4 of 11 full checks pass; L1-03 remains open because ticket-page refresh was not checked. | Browser acceptance flow on `127.0.0.1:3100`; exact test data and ticket code omitted; database cleanup count 1, remaining count 0 |

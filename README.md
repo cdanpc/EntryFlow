@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Two of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Four of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
 
 ## Assessment details
 
@@ -36,9 +36,9 @@ Mark a check as passed only after executing it and recording evidence. Implement
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Not Run | Mobile registration flow not exercised |
 | L1-02 | Scan QR with a phone QR reader; decoded content equals ticket code | Not Run | — |
-| L1-03 | Refresh and retrieve ticket with correct code and email | Not Run | — |
-| L1-04 | Wrong code/contact combination returns not found without personal information | Not Run | — |
-| L1-05 | Same email cannot register twice for one event | Not Run | — |
+| L1-03 | Refresh and retrieve ticket with correct code and email | Not Run | Matching-contact lookup returned the ticket and QR, but refreshing the ticket page was not checked. |
+| L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
+| L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
 | L1-06 | Invalid email and 10-digit mobile show field-level errors | Not Run | — |
 | L1-07 | Seeded full event is shown as full and registration is unavailable | Pass | Production page showed Fully booked; event details showed Registration is full without the form |
 | L1-08 | Staff URL while logged out is redirected or blocked server-side | Pass | Unauthenticated `/staff` returned HTTP 307 to staff sign-in |
@@ -120,8 +120,9 @@ Verified in the current workspace:
 - `npm.cmd exec -- prisma migrate deploy` — passed; initial migration applied.
 - `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
 - Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
+- Local production browser acceptance checks — successful registration displayed a confirmed ticket and QR; matching email retrieved it; a mismatched contact showed a generic not-found message; duplicate registration was rejected. The disposable registration was deleted and its absence confirmed.
 
-Database connection and initial setup are verified. The remaining Level 1 checks are not yet run, including registration transactions, ticket lookup privacy, QR decoding, and check-in persistence.
+Database connection and initial setup are verified. The remaining Level 1 checks include mobile layout, decoding the QR with a phone, invalid-input feedback, check-in persistence, invalid ticket handling, attendee totals, and ticket-page refresh. Concurrency and Organizer-only data visibility also need direct verification.
 
 ## Data model
 
