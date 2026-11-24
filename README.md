@@ -10,7 +10,7 @@ Event Registration and QR Check-in Management System for the CubeTech intern act
 - **Level reached:** In progress; not yet verified
 - **Deadline:** December 2, 2026
 - **Submission:** Share the accessible Git repository, this README, and a deployed link with `admin@sales-cubetech.cloud`.
-- **Repository:** Pending GitHub authentication and push
+- **Repository:** [github.com/cdanpc/EntryFlow](https://github.com/cdanpc/EntryFlow)
 - **Deployment:** Not deployed yet
 
 ## Implemented so far
