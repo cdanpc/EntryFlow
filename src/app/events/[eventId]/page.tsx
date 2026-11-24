@@ -34,8 +34,8 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ e
           <p className="detail-description">{event.venue}</p>
         </section>
         <aside className="registration-panel" aria-labelledby="registration-heading">
-          <div className="panel-heading"><p className="eyebrow muted">SAVE YOUR SPOT</p><h2 id="registration-heading">Register for free</h2><p>No account needed. Your ticket is ready right after signup.</p></div>
-          <div className={`spots-callout ${spotsLeft === 0 ? "spots-full" : ""}`}><span className="availability-dot" /><span>{spotsLeft === 0 ? "This event is fully booked" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} remaining`}</span></div>
+          <div className="panel-heading"><p className="eyebrow muted">SAVE YOUR SPOT</p><h2 id="registration-heading">Register for free</h2></div>
+          <div className={`spots-callout ${spotsLeft === 0 ? "spots-full" : ""}`}><span>{spotsLeft === 0 ? "This event is fully booked" : `${spotsLeft} ${spotsLeft === 1 ? "spot" : "spots"} remaining`}</span></div>
           {spotsLeft > 0 ? <RegistrationForm eventId={event.id} /> : <div className="full-message"><strong>Registration is full</strong><span>There are no spots left for this event.</span></div>}
           <p className="privacy-note">Your details are used to issue and retrieve your event ticket.</p>
         </aside>

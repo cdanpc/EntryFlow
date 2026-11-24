@@ -8,7 +8,6 @@ export default function FindTicketPage() {
       <section className="lookup-panel">
         <p className="eyebrow">TICKET LOOKUP</p><h1>Find your ticket.</h1><p className="lookup-intro">Enter the ticket code and the email or mobile number used when you registered.</p>
         <TicketLookupForm />
-        <Link className="lookup-back" href="/">← Browse events</Link>
       </section>
     </main>
   );

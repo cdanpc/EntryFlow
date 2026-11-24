@@ -53,7 +53,7 @@ export default async function EventsPage() {
                     <h3>{event.title}</h3>
                     <p className="event-description">{event.description}</p>
                     <p className="venue"><span className="pin-icon" aria-hidden="true">⌖</span>{event.venue}</p>
-                    <div className="event-footer"><span className={`availability ${full ? "full" : ""}`}><span className="availability-dot" />{full ? "Fully booked" : `${spots} spots left`}</span><Link className={`button ${full ? "button-disabled" : ""}`} aria-disabled={full} tabIndex={full ? -1 : undefined} href={full ? "#events" : `/events/${event.id}`}>{full ? "Fully booked" : "View event"}<span aria-hidden="true">→</span></Link></div>
+                    <div className="event-footer"><span className={`availability ${full ? "full" : ""}`}>{full ? "Fully booked" : `${spots} spots left`}</span><Link className={`button ${full ? "button-disabled" : ""}`} aria-disabled={full} tabIndex={full ? -1 : undefined} href={full ? "#events" : `/events/${event.id}`}>{full ? "Fully booked" : "View event"}</Link></div>
                   </div>
                 </article>
               );
