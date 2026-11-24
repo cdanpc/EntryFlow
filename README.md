@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Four of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Seven of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
 
 ## Assessment details
 
@@ -25,6 +25,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
 - Staff check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
+- PostgreSQL-backed, cross-instance rate limits for ticket lookup, staff sign-in, and check-in. Rate-limit subjects are HMAC-hashed before storage.
 - Basic security response headers and no-store caching for staff and ticket pages.
 - Unit tests for registration input validation (3 tests passing).
 
@@ -34,12 +35,12 @@ Mark a check as passed only after executing it and recording evidence. Implement
 
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
-| L1-01 | Register at phone viewport; ticket page displays QR | Not Run | Mobile registration flow not exercised |
+| L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
 | L1-02 | Scan QR with a phone QR reader; decoded content equals ticket code | Not Run | — |
-| L1-03 | Refresh and retrieve ticket with correct code and email | Not Run | Matching-contact lookup returned the ticket and QR, but refreshing the ticket page was not checked. |
+| L1-03 | Refresh and retrieve ticket with correct code and email | Pass | Matching-contact lookup returned the ticket and QR; refreshing its ticket URL kept the same confirmed ticket and QR visible. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
-| L1-06 | Invalid email and 10-digit mobile show field-level errors | Not Run | — |
+| L1-06 | Invalid email and 10-digit mobile show field-level errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
 | L1-07 | Seeded full event is shown as full and registration is unavailable | Pass | Production page showed Fully booked; event details showed Registration is full without the form |
 | L1-08 | Staff URL while logged out is redirected or blocked server-side | Pass | Unauthenticated `/staff` returned HTTP 307 to staff sign-in |
 | L1-09 | Valid check-in reports Checked in and attendee name | Not Run | — |
@@ -118,11 +119,15 @@ Verified in the current workspace:
 - `npm.cmd run build` — passed.
 - `npm.cmd exec -- prisma migrate status` — passed; database schema is up to date.
 - `npm.cmd exec -- prisma migrate deploy` — passed; initial migration applied.
+- `npm.cmd exec -- prisma migrate deploy` — passed; PostgreSQL rate-limit bucket migration applied.
 - `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
 - Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
 - Local production browser acceptance checks — successful registration displayed a confirmed ticket and QR; matching email retrieved it; a mismatched contact showed a generic not-found message; duplicate registration was rejected. The disposable registration was deleted and its absence confirmed.
+- Local production browser checks — refreshing a ticket URL retained the confirmed ticket and QR; invalid email and 10-digit mobile returned field-specific messages. The temporary registration was removed and its absence confirmed.
+- Local production browser check at a 360px emulated viewport — registration completed, and the ticket page displayed the QR without horizontal page overflow. The temporary attendee record was removed and its absence confirmed.
+- PostgreSQL rate-limit smoke check — two requests were allowed and the third was denied for a temporary test subject; its bucket was removed.
 
-Database connection and initial setup are verified. The remaining Level 1 checks include mobile layout, decoding the QR with a phone, invalid-input feedback, check-in persistence, invalid ticket handling, attendee totals, and ticket-page refresh. Concurrency and Organizer-only data visibility also need direct verification.
+Database connection and initial setup are verified. The remaining Level 1 checks include decoding the QR with a phone, check-in persistence, invalid ticket handling, and attendee totals. Concurrency and Organizer-only data visibility also need direct verification. Tablet layouts and a real-device keyboard/camera flow still need broader QA.
 
 ## Data model
 
@@ -135,9 +140,10 @@ The database migration enforces valid event schedules and positive capacity. A p
 ## Known limitations and remaining work
 
 - Run the remaining Level 1 acceptance checks and record actual evidence.
-- Add shared rate limiting for staff login, ticket lookup, and check-in before public deployment.
+- Configure the deployment proxy to overwrite and provide a trusted `x-real-ip` header (or trusted `x-forwarded-for`) so address-based rate limits use the actual client address; verify the chosen host's behavior before public launch.
 - Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.
 - The QR ticket URL contains the unguessable ticket code and must be treated as sensitive.
+- Current limits: ticket lookup 60 per address per 15 minutes; staff sign-in 30 per address and 10 per username per 15 minutes; check-in 120 per staff member per minute.
 - No deployment URL exists yet. Publish only after verification, then add the HTTPS URL here.
 - Level 2 and Level 3 have not been started.
 

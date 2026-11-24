@@ -15,7 +15,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
 - **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; code checks pass, 4 of 11 acceptance checks verified
+- **Overall status:** In progress; code checks pass, 7 of 11 acceptance checks verified
 
 ## Phase 1 — Inspect and prepare
 
@@ -157,7 +157,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - [ ] Build ticket lookup using ticket code plus matching email or mobile.
 - [ ] Return a generic not-found response for invalid lookup combinations.
 - [ ] Ensure failed lookups do not reveal personal or ticket information.
-- [ ] Apply appropriate rate limits to ticket lookup.
+- [x] Apply appropriate rate limits to ticket lookup. *(PostgreSQL-backed per-address bucket; threshold behavior smoke-checked.)*
 
 ### Exit gate
 
@@ -194,7 +194,7 @@ For each issue or change, add a short description, date, related phase, and curr
 
 - Added Auth.js Credentials sign-in using bcrypt verification and an eight-hour encrypted JWT session. Staff dashboard access is checked server-side.
 - Added manual ticket-code check-in. It verifies event selection, confirmed status, and the Asia/Manila event date, then uses a conditional atomic update so only one concurrent scan is the first check-in; subsequent scans return the original timestamp.
-- Added basic response security headers. Login and check-in rate limiting remains outstanding.
+- Added basic response security headers. PostgreSQL-backed rate limiting for staff sign-in and check-in was added and migrated on 2026-11-24; see the Phase 7 implementation note.
 - Staff sign-in page and logged-out access redirect were smoke-checked; actual sign-in and check-in transactions have not been tested.
 
 ## Phase 6 — Attendee list and attendance totals
@@ -219,7 +219,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - [ ] Make check-in an atomic status transition.
 - [ ] Save the original check-in timestamp and staff member.
 - [ ] Return clear `Checked in`, `Already checked in` (with original time), or `Invalid ticket` results.
-- [ ] Apply appropriate rate limits to sign-in and check-in.
+- [x] Apply appropriate rate limits to sign-in and check-in. *(PostgreSQL-backed per-address/username and per-staff buckets; threshold behavior smoke-checked.)*
 
 ### Exit gate
 
@@ -289,7 +289,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Work items
 
 - [ ] Run each Level 1 acceptance check and record its actual result.
-- [ ] Check registration and ticket screens on mobile at 360px.
+- [x] Check registration and ticket screens at 360px emulated viewport. *(Registration succeeded, QR displayed, and the page fit without horizontal overflow.)*
 - [ ] Check staff flows on desktop and tablet.
 - [ ] Check keyboard navigation, labels, focus states, and status announcements.
 - [ ] Review server authorization and input validation.
@@ -309,12 +309,12 @@ For each issue or change, add a short description, date, related phase, and curr
 
 | Test | Expected result | Result (Pass / Fail / Not Run) | Evidence / notes |
 |---|---|---|---|
-| L1-01 Register on phone viewport | Ticket page appears with QR | Not Run | — |
+| L1-01 Register on phone viewport | Ticket page appears with QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. Test attendee was removed afterward. |
 | L1-02 Scan QR with phone QR app | Decoded content equals ticket code | Not Run | — |
-| L1-03 Refresh and retrieve | Correct code and email return ticket | Not Run | Matching-contact lookup returned the ticket and QR, but refreshing the ticket page was not checked. |
+| L1-03 Refresh and retrieve | Correct code and email return ticket | Pass | Matching-contact lookup returned the ticket and QR; refreshing its ticket URL kept the same confirmed ticket and QR visible. |
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
 | L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
-| L1-06 Invalid email and 10-digit phone | Field-level validation errors | Not Run | — |
+| L1-06 Invalid email and 10-digit phone | Field-level validation errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
 | L1-07 Seeded full event | Full shown; registration unavailable | Pass | Production HTTP check: event card shows Fully booked; detail page shows Registration is full and omits registration form. |
 | L1-08 Staff URL while logged out | Server redirects or blocks access | Pass | Production HTTP check: `/staff` returns 307 to sign-in without a session. |
 | L1-09 Valid check-in | Checked in plus attendee name | Not Run | — |
@@ -353,8 +353,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
-| I-001 | 3–5 | Abuse protection | Add shared rate limits for ticket lookup, staff sign-in, and check-in before public deployment. | High | Open | Select a shared store suitable for the deployment target. |
-| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, QR decoding, mobile, and check-in persistence. | High | Open | Migration and seed are complete; 4 of 11 acceptance checks pass. |
+| I-001 | 3–5 | Abuse protection | Verify trusted client-address headers on the final deployment target. | High | Open | PostgreSQL-backed shared limits are implemented and migrated; host proxy must set/overwrite `x-real-ip` or trusted `x-forwarded-for`. |
+| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, QR decoding, and check-in persistence. | High | Open | Migration and seed are complete; 7 of 11 acceptance checks pass. |
 
 ### Revised
 
@@ -369,3 +369,6 @@ Use this log for items that affect multiple phases or need a single project-wide
 | 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |
 | 2026-11-24 | Phase 7 | Applied the initial Prisma migration and seeded three events plus one Organizer in Supabase. Generated a local demo password stored only in ignored `.env`. Added `AUTH_TRUST_HOST` for local/reverse-proxy operation. Production smoke checks verified full-event messaging and unauthenticated staff redirect; 2 of 11 acceptance checks pass. | `npm run db:seed` output, migration status, local production HTTP checks; `.env` remains gitignored |
 | 2026-11-24 | Phase 7 | Local production browser verified successful registration and QR ticket display, matching-contact ticket retrieval, generic wrong-contact response, and duplicate-registration rejection. Removed the disposable test registration and confirmed no matching test row remained. Total: 4 of 11 full checks pass; L1-03 remains open because ticket-page refresh was not checked. | Browser acceptance flow on `127.0.0.1:3100`; exact test data and ticket code omitted; database cleanup count 1, remaining count 0 |
+| 2026-11-24 | Phase 7 | Refreshed a confirmed ticket page and verified the QR remained visible; invalid email and a 10-digit mobile produced separate field-level errors. Removed the temporary test registration and confirmed zero matching rows remained. Total: 6 of 11 checks pass. | Local production browser on `127.0.0.1:3100`; database cleanup count 1, remaining count 0 |
+| 2026-11-24 | Phases 2, 4–5 | Added a PostgreSQL-backed atomic rate-limit bucket table and wired it into ticket lookup, staff authentication, and check-in. Applied migration `202611240002_rate_limit_buckets`; threshold smoke check allowed two requests and denied the third, then removed its test bucket. Typecheck, lint, and production build passed. | Prisma migration output; temporary smoke script output; no raw client addresses or test subjects stored |
+| 2026-11-24 | Phase 7 | Completed registration at 360px emulated mobile viewport and confirmed the QR ticket was visible with no horizontal page overflow. Removed the temporary registration; database count confirmed zero matching records. Total: 7 of 11 checks pass. | Local production browser, Chrome responsive viewport set to 360px; database cleanup count 1, remaining count 0 |

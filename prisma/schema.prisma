@@ -74,3 +74,13 @@ model StaffUser {
 
   @@map("staff_users")
 }
+
+model RateLimitBucket {
+  key             String   @id
+  attempts        Int
+  windowStartedAt DateTime @map("window_started_at") @db.Timestamptz(3)
+  expiresAt       DateTime @map("expires_at") @db.Timestamptz(3)
+
+  @@index([expiresAt])
+  @@map("rate_limit_buckets")
+}

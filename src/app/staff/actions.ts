@@ -6,12 +6,22 @@ import { RegistrationStatus } from "@prisma/client";
 import { auth } from "@/auth";
 import { manilaDateKey } from "@/lib/manila-time";
 import { prisma } from "@/lib/prisma";
+import { consumeRateLimit } from "@/lib/rate-limit";
 
 export type CheckInState = { kind: "idle" | "success" | "repeat" | "invalid" | "error"; message: string; attendee?: string; time?: string };
 
 export async function checkInTicket(eventId: string, _state: CheckInState, formData: FormData): Promise<CheckInState> {
   const session = await auth();
   if (!session?.user?.staffId) redirect("/staff/sign-in");
+  try {
+    if (!(await consumeRateLimit("checkIn", `staff:${session.user.staffId}`, 120))) {
+      return { kind: "error", message: "Too many check-in attempts. Wait a moment, then try again." };
+    }
+  } catch (error) {
+    console.error("EntryFlow check-in rate limit failed", { errorType: error instanceof Error ? error.name : "UnknownError" });
+    return { kind: "error", message: "Check-in is temporarily unavailable. Try again." };
+  }
+
   const ticketCode = String(formData.get("ticketCode") ?? "").trim();
   if (!/^[A-Za-z0-9_-]{32,64}$/.test(ticketCode)) return { kind: "invalid", message: "Invalid ticket. Check the code and selected event." };
 

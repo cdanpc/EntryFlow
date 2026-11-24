@@ -4,6 +4,7 @@ import { compare } from "bcryptjs";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { StaffRole } from "@prisma/client";
+import { consumeRateLimit, getRequestClientAddress } from "@/lib/rate-limit";
 
 const credentialsSchema = z.object({ username: z.string().trim().min(1).max(80), password: z.string().min(1).max(256) });
 
@@ -20,6 +21,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = credentialsSchema.safeParse(input);
         if (!parsed.success) return null;
         const username = parsed.data.username.toLowerCase();
+        const address = await getRequestClientAddress();
+        const addressAllowed = await consumeRateLimit("staffAuth", `address:${address}`, 30);
+        const userAllowed = await consumeRateLimit("staffAuth", `username:${username}`, 10);
+        if (!addressAllowed || !userAllowed) return null;
         const staff = await prisma.staffUser.findUnique({ where: { username }, select: { id: true, name: true, username: true, passwordHash: true, role: true } });
         if (!staff || !(await compare(parsed.data.password, staff.passwordHash))) return null;
         return { id: staff.id, name: staff.name, email: staff.username, role: staff.role };
