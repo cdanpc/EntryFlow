@@ -2,7 +2,7 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Seven of the eleven Level 1 acceptance checks are verified; the rest remain untested. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation in progress. Typecheck, lint, unit tests, production build, database migration, and demo seeding pass. Ten of the eleven Level 1 acceptance checks are verified; the remaining phone QR scan is untested. No public deployment is available yet.
 
 ## Assessment details
 
@@ -43,9 +43,9 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | L1-06 | Invalid email and 10-digit mobile show field-level errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
 | L1-07 | Seeded full event is shown as full and registration is unavailable | Pass | Production page showed Fully booked; event details showed Registration is full without the form |
 | L1-08 | Staff URL while logged out is redirected or blocked server-side | Pass | Unauthenticated `/staff` returned HTTP 307 to staff sign-in |
-| L1-09 | Valid check-in reports Checked in and attendee name | Not Run | — |
-| L1-10 | Repeated scan reports Already checked in with original time | Not Run | — |
-| L1-11 | Made-up/other-event ticket is invalid; attendee list and totals are correct | Not Run | — |
+| L1-09 | Valid check-in reports Checked in and attendee name | Pass | Organizer signed in; same-day test attendee returned “Checked in” with the expected attendee name and time. |
+| L1-10 | Repeated scan reports Already checked in with original time | Pass | Repeated the same ticket scan; UI returned “Already checked in” and the original check-in time. |
+| L1-11 | Made-up/other-event ticket is invalid; attendee list and totals are correct | Pass | Made-up ticket returned “Invalid ticket”; attendee list showed one checked-in record and totals were 1/10 registered, 1/1 checked in, 0 waitlisted. |
 
 **Do not describe Level 1 as complete until every required check passes and genuine evidence is recorded.** Track implementation, bugs, improvements, and revisions in [`EntryFlow_Level_1_Development_Tracker.md`](EntryFlow_Level_1_Development_Tracker.md).
 
@@ -126,8 +126,9 @@ Verified in the current workspace:
 - Local production browser checks — refreshing a ticket URL retained the confirmed ticket and QR; invalid email and 10-digit mobile returned field-specific messages. The temporary registration was removed and its absence confirmed.
 - Local production browser check at a 360px emulated viewport — registration completed, and the ticket page displayed the QR without horizontal page overflow. The temporary attendee record was removed and its absence confirmed.
 - PostgreSQL rate-limit smoke check — two requests were allowed and the third was denied for a temporary test subject; its bucket was removed.
+- Local production staff acceptance checks — Organizer sign-in succeeded; valid check-in, repeated scan, made-up code rejection, attendee list, and totals matched the temporary fixture. The attendee and same-day event were removed, the browser was signed out, and the demo credential was not saved in the browser.
 
-Database connection and initial setup are verified. The remaining Level 1 checks include decoding the QR with a phone, check-in persistence, invalid ticket handling, and attendee totals. Concurrency and Organizer-only data visibility also need direct verification. Tablet layouts and a real-device keyboard/camera flow still need broader QA.
+Database connection and initial setup are verified. The only remaining Level 1 acceptance check is decoding the QR with a phone. Registration/check-in concurrency and Organizer-versus-Door-Staff data visibility still need direct verification. Tablet layouts and real-device keyboard/camera behavior also need broader QA.
 
 ## Data model
 

@@ -15,7 +15,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
 - **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
 - **Last updated:** 2026-11-24
-- **Overall status:** In progress; code checks pass, 7 of 11 acceptance checks verified
+- **Overall status:** In progress; code checks pass, 10 of 11 acceptance checks verified
 
 ## Phase 1 — Inspect and prepare
 
@@ -186,7 +186,7 @@ For each issue or change, add a short description, date, related phase, and curr
 ### Development notes
 
 - Implemented ticket lookup requiring a ticket code plus matching email or mobile, with a generic mismatch response. Added a QR ticket page with attendee/event details and print styles.
-- The ticket URL contains the unguessable ticket code and is sensitive. Rate limiting is still needed before public deployment.
+- The ticket URL contains the unguessable ticket code and is sensitive. PostgreSQL-backed rate limiting is implemented; deployment proxy address headers still need verification.
 
 ## Phase 5 — Staff sign-in and manual check-in
 
@@ -195,38 +195,38 @@ For each issue or change, add a short description, date, related phase, and curr
 - Added Auth.js Credentials sign-in using bcrypt verification and an eight-hour encrypted JWT session. Staff dashboard access is checked server-side.
 - Added manual ticket-code check-in. It verifies event selection, confirmed status, and the Asia/Manila event date, then uses a conditional atomic update so only one concurrent scan is the first check-in; subsequent scans return the original timestamp.
 - Added basic response security headers. PostgreSQL-backed rate limiting for staff sign-in and check-in was added and migrated on 2026-11-24; see the Phase 7 implementation note.
-- Staff sign-in page and logged-out access redirect were smoke-checked; actual sign-in and check-in transactions have not been tested.
+- Local production browser check verified Organizer sign-in/out, one successful same-day check-in, and repeat-scan handling with the original check-in time. Concurrent simultaneous scans remain unverified.
 
 ## Phase 6 — Attendee list and attendance totals
 
 ### Development notes
 
 - Added an Organizer-only attendee list with name/code search, 50-row pagination, contact details, ticket status, and registration time. Door Staff sees check-in but not attendee contact records.
-- Added registered/capacity, checked-in, and waitlisted counters. Seeded event capacities were verified; attendee-specific counters remain unverified.
+- Added registered/capacity, checked-in, and waitlisted counters. A temporary one-attendee event showed matching totals and attendee status; broader multi-record and role-access checks remain open.
 
 ## Phase 5 — Staff sign-in and manual check-in
 
 ### Work items
 
-- [ ] Build the staff sign-in screen.
-- [ ] Hash staff passwords with an established password-hashing library.
-- [ ] Implement secure staff sessions and cookies.
-- [ ] Protect staff pages and sensitive API operations on the server.
-- [ ] Document demo staff credentials safely for local development.
-- [ ] Build the event selector for staff.
-- [ ] Build manual ticket-code entry with keyboard-scanner support.
-- [ ] Allow check-in only for an eligible confirmed ticket for the selected event on event day in Asia/Manila.
-- [ ] Make check-in an atomic status transition.
-- [ ] Save the original check-in timestamp and staff member.
-- [ ] Return clear `Checked in`, `Already checked in` (with original time), or `Invalid ticket` results.
+- [x] Build the staff sign-in screen. *(Rendered and used successfully.)*
+- [x] Hash staff passwords with an established password-hashing library. *(Organizer sign-in succeeded using the seeded bcrypt hash.)*
+- [x] Implement secure staff sessions and cookies. *(Authenticated dashboard and sign-out flow verified.)*
+- [x] Protect staff pages and sensitive API operations on the server. *(Logged-out `/staff` redirect verified; check-in used an authenticated Organizer session.)*
+- [x] Document demo staff credentials safely for local development. *(README documents the environment variable, not its value.)*
+- [x] Build the event selector for staff. *(Selected the same-day test event.)*
+- [x] Build manual ticket-code entry with keyboard-scanner support. *(Manual ticket entry exercised.)*
+- [x] Allow check-in only for an eligible confirmed ticket for the selected event on event day in Asia/Manila. *(Same-day confirmed ticket passed; invalid ticket rejected.)*
+- [x] Make check-in an atomic status transition. *(First scan checked in; later scan returned the existing state.)*
+- [x] Save the original check-in timestamp and staff member. *(Original timestamp remained on repeat; authenticated staff performed the transition.)*
+- [x] Return clear `Checked in`, `Already checked in` (with original time), or `Invalid ticket` results. *(All three outcomes observed.)*
 - [x] Apply appropriate rate limits to sign-in and check-in. *(PostgreSQL-backed per-address/username and per-staff buckets; threshold behavior smoke-checked.)*
 
 ### Exit gate
 
-- [ ] Logged-out users cannot access protected staff operations.
-- [ ] Valid check-in records the first check-in exactly once.
-- [ ] Repeated scans report the original check-in time.
-- [ ] Invalid or ineligible tickets cannot check in.
+- [x] Logged-out users cannot access protected staff operations.
+- [x] Valid check-in records the first check-in exactly once. *(Sequential retry did not create a second check-in.)*
+- [x] Repeated scans report the original check-in time.
+- [x] Invalid or ineligible tickets cannot check in.
 - [ ] Concurrent scans cannot both register a new successful check-in.
 
 ### Bugs
@@ -251,19 +251,19 @@ For each issue or change, add a short description, date, related phase, and curr
 
 ### Work items
 
-- [ ] Show attendee name, email, mobile, ticket code, registration time, and check-in status.
+- [x] Show attendee name, email, mobile, ticket code, registration time, and check-in status. *(Confirmed in the Organizer attendee list.)*
 - [ ] Add search by attendee name or ticket code.
-- [ ] Show registered/capacity totals.
-- [ ] Show checked-in/registered totals.
+- [x] Show registered/capacity totals. *(Temporary event showed 1/10.)*
+- [x] Show checked-in/registered totals. *(After check-in, temporary event showed 1/1.)*
 - [ ] Restrict attendee information to authorized staff.
-- [ ] Ensure totals reflect authoritative database records.
+- [x] Ensure totals reflect authoritative database records. *(List and totals matched the one temporary registration.)*
 - [ ] Ensure the mobile layout remains usable without horizontal scrolling.
 
 ### Exit gate
 
-- [ ] Authorized staff can find attendee records.
+- [x] Authorized staff can find attendee records. *(Organizer dashboard displayed the temporary record.)*
 - [ ] Search and displayed details are correct.
-- [ ] Attendance totals match underlying records.
+- [x] Attendance totals match underlying records. *(1 registered, 1 checked in, 0 waitlisted.)*
 - [ ] Unauthorized users cannot retrieve attendee information.
 
 ### Bugs
@@ -317,9 +317,9 @@ For each issue or change, add a short description, date, related phase, and curr
 | L1-06 Invalid email and 10-digit phone | Field-level validation errors | Pass | Submitting an invalid email and 10-digit mobile returned separate email and mobile field errors. |
 | L1-07 Seeded full event | Full shown; registration unavailable | Pass | Production HTTP check: event card shows Fully booked; detail page shows Registration is full and omits registration form. |
 | L1-08 Staff URL while logged out | Server redirects or blocks access | Pass | Production HTTP check: `/staff` returns 307 to sign-in without a session. |
-| L1-09 Valid check-in | Checked in plus attendee name | Not Run | — |
-| L1-10 Same code scanned again | Already checked in plus original time | Not Run | — |
-| L1-11 Made-up/other-event code and attendee totals | Invalid ticket; list and counts correct | Not Run | — |
+| L1-09 Valid check-in | Checked in plus attendee name | Pass | Organizer session checked in the same-day test attendee; UI showed “Checked in”, expected name, and check-in time. |
+| L1-10 Same code scanned again | Already checked in plus original time | Pass | Repeated the scan; UI returned “Already checked in” and the same original time. |
+| L1-11 Made-up/other-event code and attendee totals | Invalid ticket; list and counts correct | Pass | Made-up code returned “Invalid ticket”; list showed one checked-in record; totals were 1/10 registered, 1/1 checked in, 0 waitlisted. |
 
 ### Bugs
 
@@ -354,7 +354,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | ID | Phase | Area | Improvement needed | Priority | Status | Notes |
 |---|---|---|---|---|---|---|
 | I-001 | 3–5 | Abuse protection | Verify trusted client-address headers on the final deployment target. | High | Open | PostgreSQL-backed shared limits are implemented and migrated; host proxy must set/overwrite `x-real-ip` or trusted `x-forwarded-for`. |
-| I-002 | All | Verification | Execute the remaining Level 1 acceptance checks, especially registration concurrency, QR decoding, and check-in persistence. | High | Open | Migration and seed are complete; 7 of 11 acceptance checks pass. |
+| I-002 | All | Verification | Complete the remaining phone QR scan and review concurrency and role-based data access. | High | Open | Migration and seed are complete; 10 of 11 acceptance checks pass. |
 
 ### Revised
 
@@ -372,3 +372,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 | 2026-11-24 | Phase 7 | Refreshed a confirmed ticket page and verified the QR remained visible; invalid email and a 10-digit mobile produced separate field-level errors. Removed the temporary test registration and confirmed zero matching rows remained. Total: 6 of 11 checks pass. | Local production browser on `127.0.0.1:3100`; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phases 2, 4–5 | Added a PostgreSQL-backed atomic rate-limit bucket table and wired it into ticket lookup, staff authentication, and check-in. Applied migration `202611240002_rate_limit_buckets`; threshold smoke check allowed two requests and denied the third, then removed its test bucket. Typecheck, lint, and production build passed. | Prisma migration output; temporary smoke script output; no raw client addresses or test subjects stored |
 | 2026-11-24 | Phase 7 | Completed registration at 360px emulated mobile viewport and confirmed the QR ticket was visible with no horizontal page overflow. Removed the temporary registration; database count confirmed zero matching records. Total: 7 of 11 checks pass. | Local production browser, Chrome responsive viewport set to 360px; database cleanup count 1, remaining count 0 |
+| 2026-11-24 | Phase 7 | Used the seeded Organizer account in the local browser. Verified valid check-in, repeat scan with the original time, made-up code rejection, attendee status, and totals. Removed the temporary attendee and same-day event; database cleanup confirmed one registration and one event removed with zero remaining fixture registrations. Signed out and dismissed Chrome's save-password prompt without saving. Total: 10 of 11 acceptance checks pass. | Local production browser and Supabase cleanup script; credential and ticket code omitted |
