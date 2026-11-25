@@ -351,6 +351,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | B-001 | Deploy | Vercel typecheck used a Prisma Client without the new `manualCode` field. | High | Fixed | 2026-11-24 | Latest Vercel logs confirm `postinstall` generated the updated Prisma Client. |
 | B-002 | Deploy | Vercel typecheck found `ticket` out of scope in the ticket lookup action after Prisma generation succeeded. | High | Fixed | 2026-11-24 | Store the resolved ticket code outside the `try` block; local typecheck and production build pass. Latest fix still needs a Vercel rebuild. |
 | B-003 | 5 | Camera scan exposed the long QR token in a disabled manual field and gave no submission result for future events. | High | Fixed in code; device retest pending | 2026-11-25 | The manual field remains editable; scans submit the private token separately and show progress and server result. A same-day demo event was created for check-in testing. |
+| B-004 | 5 | A valid ticket for a future event was described as invalid, while the checked-in total stayed at zero. | Medium | Fixed in code; deployment retest pending | 2026-11-25 | Server now identifies the event date in the result; dashboard displays a date notice before scanning. Database shows two confirmed tickets for Cebu Dev Meetup on December 8 and no registrations yet for today's demo event. |
 
 ### Needs improvement
 

@@ -37,8 +37,12 @@ export async function checkInTicket(eventId: string, _state: CheckInState, formD
     if (ticket.status === RegistrationStatus.CHECKED_IN && ticket.checkedInAt) {
       return { kind: "repeat", message: "Already checked in", attendee: ticket.fullName, time: new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" }).format(ticket.checkedInAt) };
     }
-    if (ticket.status !== RegistrationStatus.CONFIRMED || manilaDateKey(ticket.event.startsAt) !== manilaDateKey(new Date())) {
-      return { kind: "invalid", message: "Invalid ticket. Check-in is available for confirmed tickets on the event day." };
+    if (ticket.status !== RegistrationStatus.CONFIRMED) {
+      return { kind: "invalid", message: "This ticket is not confirmed and cannot be checked in." };
+    }
+    if (manilaDateKey(ticket.event.startsAt) !== manilaDateKey(new Date())) {
+      const eventDate = new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "long" }).format(ticket.event.startsAt);
+      return { kind: "invalid", message: `Ticket found. Check-in opens on ${eventDate} (Cebu time).` };
     }
 
     const checkedInAt = new Date();
