@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { StaffSignInForm } from "@/components/staff-sign-in-form";
 import { staffReturnPath } from "@/lib/staff-return-path";
+import { MobileNav } from "@/components/mobile-nav";
 
 export default async function StaffSignInPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
   const next = staffReturnPath((await searchParams).next);
@@ -12,6 +13,7 @@ export default async function StaffSignInPage({ searchParams }: { searchParams: 
     <main className="detail-shell">
       <header className="detail-topbar sign-in-topbar"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link></header>
       <section className="lookup-panel sign-in-panel"><h1>Sign in</h1><p className="lookup-intro">Access event check-in and attendee records.</p><StaffSignInForm next={next} /></section>
+      <MobileNav role="attendee" current="signin" desktopOnly />
     </main>
   );
 }
