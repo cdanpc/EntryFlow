@@ -94,8 +94,10 @@
   .attendee-header .brand, .attendee-header nav, .attendee-header .staff-link,
   .detail-topbar > .brand { display: none; }
   .attendee-header.topbar, .detail-topbar { height: 48px; border: 0; }
+  .attendee-home .attendee-header.topbar { height: 20px; }
   .attendee-home .events-section { padding: 0 0 48px; }
-  .attendee-home .section-heading { align-items: center; gap: 24px; margin-bottom: 24px; }
+  .attendee-home .section-heading { align-items: start; gap: 24px; margin-bottom: 16px; }
+  .attendee-home .event-browse-controls { width: min(72%, 780px); max-width: none; }
   .attendee-home .section-heading .eyebrow { display: none; }
   .attendee-home .section-heading h2 { margin: 0; font-size: 28px; font-weight: 800; }
   .attendee-home .event-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 16px; }

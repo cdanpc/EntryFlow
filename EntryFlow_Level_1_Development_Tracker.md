@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Extended desktop event search toward the left and reduced the empty top header strip to 20px. Added date and sort dropdowns below search, preserving query/filter URL state. Cebu-based date windows and deterministic date/name/available-spots sorting use current confirmed/check-in counts; capacity enforcement is unchanged. All 29 tests, lint, typecheck, and production build pass; browser/device visual checks remain pending because browser access is unavailable.
+
 - 2026-11-26: Replaced all generated E marks with the supplied PNG via shared BrandLogo, including headers, sidebar, sign-in, tickets, and footer. Removed the desktop rule hiding Back to events; its existing placement above the event photo now applies at every viewport size. Lint, typecheck, and production build pass. Browser/device visual verification remains pending because browser access is unavailable.
 
 - 2026-11-26: Moved staff Back inside the detail card above ATTENDEE DETAILS on desktop/mobile. Event details now uses the shared Find Ticket header and shows Back to events above the photo on compact layouts. Desktop staff name/code search expands across two thirds of the controls row. Lint, typecheck, and production build pass; browser visual verification remains pending.
