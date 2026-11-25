@@ -72,8 +72,20 @@ model StaffUser {
   role          StaffRole     @default(ORGANIZER)
   createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(3)
   checkIns      Registration[]
+  sessions      StaffSession[]
 
   @@map("staff_users")
+}
+
+model StaffSession {
+  id             String    @id
+  staffUserId    String    @map("staff_user_id")
+  lastActivityAt DateTime  @default(now()) @map("last_activity_at") @db.Timestamptz(3)
+  expiresAt      DateTime  @map("expires_at") @db.Timestamptz(3)
+  staffUser      StaffUser @relation(fields: [staffUserId], references: [id], onDelete: Cascade)
+
+  @@index([expiresAt])
+  @@map("staff_sessions")
 }
 
 model RateLimitBucket {
