@@ -6,6 +6,7 @@ import { eventPhoto } from "@/lib/event-photo";
 import { prisma } from "@/lib/prisma";
 import { MobileNav } from "@/components/mobile-nav";
 import { AttendeeHeader } from "@/components/attendee-header";
+import { BrandLogo } from "@/components/brand-logo";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,7 @@ export default async function EventsPage({ searchParams }: { searchParams: Promi
             </Link>;
           })}</div>}
       </section>
-      <footer className="footer"><Link className="brand footer-brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link><span>CEBU · PH</span></footer>
+      <footer className="footer"><Link className="brand footer-brand" href="/"><BrandLogo />EntryFlow</Link><span>CEBU · PH</span></footer>
       <MobileNav role="attendee" current="home" />
     </main>
   );

@@ -136,7 +136,6 @@
   .attendee-search-label { position: static; display: block; width: auto; height: auto; margin: 0 0 7px; overflow: visible; clip: auto; white-space: normal; font-size: 12px; font-weight: 700; }
   .staff-activity .staff-directory-controls { grid-template-columns: minmax(0, 520px); }
   .staff-scan-page .mobile-scanner { margin-top: 6vh; }
-  .attendee-event-details .event-detail-back { display: none; }
   .staff-detail-card { margin-top: 48px; }
   .staff-verify-panel { margin-top: 0; }
   .detail-layout { max-width: 1200px; margin: 0 auto; padding-top: 0; }

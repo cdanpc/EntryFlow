@@ -8,6 +8,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCebuDateRange } from "@/lib/format";
 import { auth } from "@/auth";
 import { MobileNav } from "@/components/mobile-nav";
+import { BrandLogo } from "@/components/brand-logo";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -34,7 +35,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
   const staffHref = `/staff/sign-in?next=${encodeURIComponent(verifyPath)}`;
   return (
     <main className="ticket-page">
-      <header className="detail-topbar ticket-topbar"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link></header>
+      <header className="detail-topbar ticket-topbar"><Link className="brand" href="/"><BrandLogo />EntryFlow</Link></header>
       <article className="ticket-card">
         <div className="ticket-top"><p className="eyebrow">YOUR ENTRYFLOW TICKET</p><span className={`ticket-status status-${ticket.status.toLowerCase()}`}>{statusLabel}</span></div>
         <h1>{ticket.event.title}</h1>

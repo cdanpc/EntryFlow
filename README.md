@@ -16,7 +16,9 @@ This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverles
 
 Above 1024px, the mobile navigation becomes a fixed left sidebar based on the supplied desktop SVGs. Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector, with search using twice the selector's share of the available width. Staff attendee details has a Back link inside the card above its label on desktop and mobile, returning to the same event's list.
 
-Public event details uses the shared Home/Find Ticket header. On mobile and tablet, Back to events appears above the event photo; the existing floating navigation still appears after scrolling.
+Public event details uses the shared Home/Find Ticket header. Back to events appears above the event photo on mobile, tablet, and desktop; the compact floating navigation still appears after scrolling.
+
+Brand marks use the supplied `Logo/Glossy Blue E Arrow Logo.png` through the reusable `BrandLogo` component. Next.js optimizes the image for display; CSS frames its white margins without altering the source artwork. Header, staff home, sidebar, sign-in, ticket, and footer branding share this asset.
 
 The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
 

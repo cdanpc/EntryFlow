@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { NavigationIcon, type NavigationIconName } from "@/components/navigation-icon";
+import { BrandLogo } from "@/components/brand-logo";
 
 type Item = { href: string; label: string; icon: NavigationIconName; desktopOnly?: boolean };
 
@@ -28,7 +29,7 @@ export function MobileNav({ role, current, revealOnScroll = false, eventId, desk
     ? [{ href: "/", label: "Home", icon: "home" }, { href: "/tickets", label: "Find Ticket", icon: "ticket" }, { href: "/staff/sign-in", label: "Sign in", icon: "signin", desktopOnly: true }]
     : [{ href: "/staff", label: "Attendees", icon: "home" }, { href: "/staff/scan", label: "Scan", icon: "scan" }, { href: "/staff/activity", label: "Activity", icon: "activity" }];
   const staffHome = selectedEvent ? `/staff?eventId=${encodeURIComponent(selectedEvent)}` : "/staff";
-  return <nav className={`mobile-nav ${role === "staff" ? "staff-dock" : ""} ${desktopOnly ? "desktop-only-nav" : ""} ${visible ? "" : "mobile-nav-hidden"}`} aria-label={`${role === "staff" ? "Staff" : "Attendee"} navigation`} inert={!visible}><Link className="desktop-nav-brand" href={role === "staff" ? staffHome : "/"} aria-label="EntryFlow home"><span className="brand-mark" aria-hidden="true">E</span><span>EntryFlow</span></Link><div className="mobile-nav-inner">{items.map((item) => {
+  return <nav className={`mobile-nav ${role === "staff" ? "staff-dock" : ""} ${desktopOnly ? "desktop-only-nav" : ""} ${visible ? "" : "mobile-nav-hidden"}`} aria-label={`${role === "staff" ? "Staff" : "Attendee"} navigation`} inert={!visible}><Link className="desktop-nav-brand" href={role === "staff" ? staffHome : "/"} aria-label="EntryFlow home"><BrandLogo /><span>EntryFlow</span></Link><div className="mobile-nav-inner">{items.map((item) => {
     const active = current === item.icon || (item.icon === "ticket" && current === "search");
     const [path, hash] = item.href.split("#");
     const href = role === "staff" && selectedEvent ? `${path}?eventId=${encodeURIComponent(selectedEvent)}${hash ? `#${hash}` : ""}` : item.href;

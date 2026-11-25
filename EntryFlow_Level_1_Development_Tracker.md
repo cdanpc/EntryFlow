@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Replaced all generated E marks with the supplied PNG via shared BrandLogo, including headers, sidebar, sign-in, tickets, and footer. Removed the desktop rule hiding Back to events; its existing placement above the event photo now applies at every viewport size. Lint, typecheck, and production build pass. Browser/device visual verification remains pending because browser access is unavailable.
+
 - 2026-11-26: Moved staff Back inside the detail card above ATTENDEE DETAILS on desktop/mobile. Event details now uses the shared Find Ticket header and shows Back to events above the photo on compact layouts. Desktop staff name/code search expands across two thirds of the controls row. Lint, typecheck, and production build pass; browser visual verification remains pending.
 
 - 2026-11-26: Aligned desktop attendee search beside Event, removed the staff Home check-in desk and Manual entry sidebar link, and added a desktop black Back link with theme-color hover above attendee details. Scan now accepts six-character manual entry below the camera on mobile and desktop. Authenticated, rate-limited lookup respects selected-event scope and redirects to the same protected review flow without recording attendance. All 21 tests, lint, typecheck, and production build pass; browser/device visual verification remains pending.
