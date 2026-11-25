@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Reproduced the public attendee event-list HTTP 500 and the database error `EMAXCONNSESSION` (session pool limit 15). Runtime Supabase connections now use transaction pooling on port 6543 with PgBouncer compatibility and a default one-connection pool. Migration/local/direct URLs are unchanged. The same database event read and a SELECT-only transaction pass through the new runtime URL. All 16 unit tests, lint, typecheck, and production build pass. Local production HTTP check against the live database returns 200 with event cards and no generic application error. Vercel recovery awaits review/merge/deployment.
+
 - 2026-11-26: Integrated attendee name/code search into a shared responsive staff directory with 300 ms debounce, cancellation, status filters, clear action, retry/session feedback, and 50-row pagination. Door Staff queries omit contacts and QR secrets; Organizer contact access remains. Added selected-event navigation through Attendees, Scan, Activity, ticket review, and attendee details. Activity lists recent check-ins for the event. Legacy Search redirects to Attendees. Tests: 13 pass; lint/typecheck/build pass. Browser/device review remains pending.
 
 - 2026-11-26: Aligned sign-in branding to the left. Staff checked-in status and success/repeat results now use green status text without a green badge or result background. Lint and typecheck pass; visual review pending.
