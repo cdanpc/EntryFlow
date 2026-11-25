@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { EventStatus } from "@prisma/client";
-import { formatCebuDateRange } from "@/lib/format";
+import { formatCebuDate } from "@/lib/format";
 import { eventPhoto } from "@/lib/event-photo";
 import { prisma } from "@/lib/prisma";
 import { MobileNav } from "@/components/mobile-nav";
@@ -18,7 +18,7 @@ export default async function EventsPage() {
   return (
     <main className="site-shell attendee-home">
       <header className="topbar">
-        <Link className="brand" href="/" aria-label="EntryFlow home"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link>
+        <Link className="brand" href="/" aria-label="EntryFlow home"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link>
         <nav aria-label="Main navigation"><a className="nav-link active" href="#events">Browse events</a><Link className="nav-link" href="/tickets">Find my ticket</Link></nav>
         <Link className="staff-link" href="/staff/sign-in">Staff sign in</Link>
       </header>
@@ -30,11 +30,11 @@ export default async function EventsPage() {
             const spots = Math.max(0, event.capacity - event._count.registrations);
             return <Link className="event-card" key={event.id} href={`/events/${event.id}`} aria-label={`${event.title}. ${spots === 0 ? "Fully booked" : `${spots} spots left`}. View event details`}>
               <div className="event-art"><Image src={eventPhoto(event.id)} alt="" fill sizes="(max-width: 760px) 46vw, (max-width: 1100px) 45vw, 360px" /></div>
-              <div className="event-content"><p className="event-date">{formatCebuDateRange(event.startsAt, event.endsAt)}</p><h3>{event.title}</h3><p className="event-description">{event.description}</p><p className="venue">{event.venue}</p><div className="event-footer"><span className={`availability ${spots === 0 ? "full" : ""}`}>{spots === 0 ? "Fully booked" : `${spots} spots left`}</span></div></div>
+              <div className="event-content"><p className="event-date">{formatCebuDate(event.startsAt)}</p><h3>{event.title}</h3><p className="event-description">{event.description}</p><p className="venue">{event.venue}</p><div className="event-footer"><span className={`availability ${spots === 0 ? "full" : ""}`}>{spots === 0 ? "Fully booked" : `${spots} spots left`}</span></div></div>
             </Link>;
           })}</div>}
       </section>
-      <footer className="footer"><Link className="brand footer-brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link><span>CEBU · PH</span></footer>
+      <footer className="footer"><Link className="brand footer-brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link><span>CEBU · PH</span></footer>
       <MobileNav role="attendee" current="home" />
     </main>
   );

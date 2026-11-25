@@ -33,7 +33,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
   const staffHref = `/staff/sign-in?next=${encodeURIComponent(verifyPath)}`;
   return (
     <main className="ticket-page">
-      <header className="detail-topbar ticket-topbar"><Link href="/" className="back-link">← <span>Browse events</span></Link><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link><span className="topbar-spacer" /></header>
+      <header className="detail-topbar ticket-topbar"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link></header>
       <article className="ticket-card">
         <div className="ticket-top"><p className="eyebrow">YOUR ENTRYFLOW TICKET</p><span className={`ticket-status status-${ticket.status.toLowerCase()}`}>{statusLabel}</span></div>
         <h1>{ticket.event.title}</h1>

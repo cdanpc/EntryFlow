@@ -47,3 +47,42 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 @media(max-width:380px){.site-shell{padding:0 15px}.topbar nav{gap:12px}.nav-link{font-size:11px}.event-content{padding:16px}.button{padding:0 10px;gap:7px}.availability{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition-duration:.01ms!important;animation-duration:.01ms!important;animation-iteration-count:1!important}}
 @media print{body{background:white}.ticket-page{padding:0}.ticket-topbar,.ticket-help,.ticket-card>.lookup-back{display:none}.ticket-card{margin:0 auto;box-shadow:none;border:1px solid #bbb}.ticket-qr img{width:210px;height:210px}}
+
+/* Updated typography and compact navigation */
+:root{--font-sans:"Segoe UI Variable","Aptos",system-ui,-apple-system,"Segoe UI",sans-serif}
+.brand{font-weight:800;letter-spacing:-.9px}
+.section-heading h2{font-weight:800}
+.detail-topbar{display:flex;align-items:center;justify-content:center}
+.staff-account{position:relative;z-index:60}
+.staff-account summary{display:flex;align-items:center;justify-content:center;gap:5px;min-width:80px;min-height:40px;padding:0 12px;border:1px solid #d6e8ee;border-radius:999px;background:#f1f9fb;color:var(--navy);font-size:13px;font-weight:750;cursor:pointer;list-style:none}
+.staff-account summary::-webkit-details-marker{display:none}
+.staff-account summary svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.staff-account[open] summary svg{transform:rotate(180deg)}
+.staff-account summary:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
+.staff-account-menu{position:absolute;top:calc(100% + 8px);right:0;width:150px;padding:5px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 10px 28px #102b3d1f}
+.staff-account-menu button{width:100%;min-height:42px;padding:0 12px;border:0;border-radius:7px;background:#fff;color:var(--navy);font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.staff-account-menu button:hover,.staff-account-menu button:focus-visible{background:#eaf6f9}
+.event-picker{grid-template-columns:auto minmax(0,1fr)}
+.mobile-event-picker{grid-template-columns:1fr}
+.mobile-event-picker label{grid-column:auto}
+.mobile-attendee-list>a>span:first-child{font-weight:400}
+.attendee-table td:nth-child(1){font-weight:400}
+.sign-in-panel{margin-top:clamp(32px,8vh,76px)}
+.sign-in-panel h1{font-weight:800}
+.sign-in-panel .lookup-intro{margin-bottom:28px}
+@media(max-width:760px){
+  .attendee-home .section-heading h2{font-weight:800}
+  .attendee-home .staff-link{min-height:36px;padding:0 11px;border:1px solid #d5e9ee;border-radius:999px;background:#fff;font-size:12px}
+  .attendee-home .event-content{display:flex;flex-direction:column;gap:4px;min-height:138px;padding:11px}
+  .attendee-home .event-date{margin:0}
+  .attendee-home .event-content h3{min-height:0;font-weight:750}
+  .attendee-home .venue{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;padding:0;border:0;font-size:11px;line-height:1.35}
+  .attendee-home .event-footer{margin-top:auto;padding-top:4px}
+  .mobile-event-picker{display:grid;grid-template-columns:1fr;gap:7px}
+  .mobile-event-picker label{grid-column:auto}
+  .staff-header{padding:0 16px}
+  .staff-account summary{min-height:38px}
+  .lookup-panel{margin-top:30px;padding:24px 20px}
+  .sign-in-panel{margin-top:clamp(28px,8vh,54px)}
+  .sign-in-panel h1{font-size:34px}
+}

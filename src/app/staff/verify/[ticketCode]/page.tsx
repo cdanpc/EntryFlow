@@ -1,9 +1,9 @@
-import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { formatCebuDateRange } from "@/lib/format";
 import { TicketVerifyForm } from "@/components/ticket-verify-form";
+import { StaffHeader } from "@/components/staff-header";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,7 @@ export default async function StaffVerifyPage({ params }: { params: Promise<{ ti
 
   return (
     <main className="detail-shell">
-      <header className="detail-topbar"><Link href="/staff" className="back-link">← <span>Check-in desk</span></Link><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link><span className="topbar-spacer" /></header>
+      <StaffHeader role={session.user.role} />
       <section className="lookup-panel staff-verify-panel">
         <p className="eyebrow">STAFF VERIFICATION</p>
         <h1>Verify ticket</h1>

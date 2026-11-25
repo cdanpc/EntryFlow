@@ -15,3 +15,12 @@ export function formatCebuDateRange(startsAt: Date, endsAt: Date) {
 
   return `${date} · ${time.format(startsAt)}–${time.format(endsAt)}`;
 }
+
+export function formatCebuDate(date: Date) {
+  return new Intl.DateTimeFormat("en-PH", {
+    timeZone: "Asia/Manila",
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+}
