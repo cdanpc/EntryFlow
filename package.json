@@ -13,6 +13,7 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:seed:staff": "tsx prisma/seed-staff.ts",
+    "db:seed:today-demo": "node scripts/seed-today-demo-event.mjs",
     "test": "vitest run"
   },
   "dependencies": {

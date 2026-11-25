@@ -9,10 +9,15 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
   const [state, formAction, pending] = useActionState(action, { kind: "idle", message: "" } satisfies CheckInState);
   const [scanning, setScanning] = useState(false);
   const [cameraError, setCameraError] = useState("");
+  const [scanStatus, setScanStatus] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const scannedCodeRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
   const controlsRef = useRef<IScannerControls | null>(null);
+
+  useEffect(() => {
+    if (state.kind !== "idle") setScanStatus("");
+  }, [state]);
 
   useEffect(() => {
     if (!scanning) return;
@@ -32,10 +37,10 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
           detected = true;
           controlsRef.current?.stop();
           setScanning(false);
-          if (inputRef.current && formRef.current) {
-            inputRef.current.value = result.getText().trim();
-            if (enabled) formRef.current.requestSubmit();
-            else setCameraError("QR scanned. Check-in opens on the event date in Cebu.");
+          if (scannedCodeRef.current && formRef.current) {
+            scannedCodeRef.current.value = result.getText().trim();
+            setScanStatus("QR read. Checking ticket…");
+            formRef.current.requestSubmit();
           }
         });
         if (cancelled || detected) controls.stop();
@@ -59,12 +64,14 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
   }, [scanning, enabled, eventId]);
 
   return (
-    <form ref={formRef} action={formAction} className="checkin-form">
+    <form ref={formRef} action={formAction} className="checkin-form" aria-busy={pending}>
       <label htmlFor="ticketCode">Ticket code</label>
-      <div className="checkin-entry"><input ref={inputRef} id="ticketCode" name="ticketCode" autoComplete="off" placeholder="Enter ticket code" required disabled={!enabled || pending} /><button type="submit" disabled={!enabled || pending}>{pending ? "Checking…" : "Check in"}</button></div>
-      <button className="camera-button" type="button" disabled={pending} onClick={() => { setCameraError(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Scan QR with camera"}</button>
+      <input ref={scannedCodeRef} type="hidden" name="ticketCode" />
+      <div className="checkin-entry"><input id="ticketCode" name="manualCode" autoComplete="off" placeholder="Enter 6-character code" maxLength={6} disabled={pending} onFocus={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; }} onChange={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; setScanStatus(""); }} /><button type="submit" disabled={pending} onClick={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; setScanStatus(""); }}>{pending ? "Checking…" : "Check in"}</button></div>
+      <button className="camera-button" type="button" disabled={pending} onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Scan QR with camera"}</button>
       {scanning && <div className="scanner-preview"><video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" /><p>Point the camera at the attendee&apos;s QR ticket.</p></div>}
       {cameraError && <p className="field-error" role="alert">{cameraError}</p>}
+      {(pending || scanStatus) && <p className="field-hint" role="status" aria-live="polite">{pending ? "Checking ticket…" : scanStatus}</p>}
       {!enabled && <p className="field-hint">Check-in is available on the event date in Cebu.</p>}
       {state.kind !== "idle" && <div className={`checkin-result result-${state.kind}`} role="status" aria-live="polite"><strong>{state.message}</strong>{state.attendee && <span>{state.attendee}</span>}{state.time && <span>{state.time}</span>}</div>}
     </form>

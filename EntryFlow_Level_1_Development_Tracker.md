@@ -311,7 +311,7 @@ For each issue or change, add a short description, date, related phase, and curr
 | Test | Expected result | Result (Pass / Fail / Not Run) | Evidence / notes |
 |---|---|---|---|
 | L1-01 Register on phone viewport | Ticket page appears with QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. Test attendee was removed afterward. |
-| L1-02 Scan QR with Door Staff phone camera | Decoded QR secret is accepted by check-in | Not Run | Camera can now read tickets before event day; actual check-in still requires a same-day event and a real-phone scan. |
+| L1-02 Scan QR with Door Staff phone camera | Decoded QR secret is accepted by check-in | Not Run | Same-day demo event created in configured Supabase database; actual phone scan and result still need verification. |
 | L1-03 Refresh and retrieve | Six-character code and email return ticket | Not Run | Prior verification used the former long code; retest the revised lookup flow. |
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
 | L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
@@ -350,6 +350,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 |---|---|---|---|---|---|---|
 | B-001 | Deploy | Vercel typecheck used a Prisma Client without the new `manualCode` field. | High | Fixed | 2026-11-24 | Latest Vercel logs confirm `postinstall` generated the updated Prisma Client. |
 | B-002 | Deploy | Vercel typecheck found `ticket` out of scope in the ticket lookup action after Prisma generation succeeded. | High | Fixed | 2026-11-24 | Store the resolved ticket code outside the `try` block; local typecheck and production build pass. Latest fix still needs a Vercel rebuild. |
+| B-003 | 5 | Camera scan exposed the long QR token in a disabled manual field and gave no submission result for future events. | High | Fixed in code; device retest pending | 2026-11-25 | The manual field remains editable; scans submit the private token separately and show progress and server result. A same-day demo event was created for check-in testing. |
 
 ### Needs improvement
 
@@ -364,6 +365,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 | Date | Phase | Item revised | Previous behavior / decision | Revised behavior / decision | Reason |
 |---|---|---|---|---|---|
 | 2026-11-24 | 4–6 | Ticket identifiers | One long ticket code served as the visible code, lookup value, QR payload, and ticket URL secret. | Separate the six-character manual code from the 256-bit QR and URL secret; lookup still requires the matching email or mobile. | Reduce typing while retaining an unguessable QR secret and contact-gated retrieval. |
+| 2026-11-25 | 5 | Camera check-in form | Scanned QR token appeared in the manual field; future event selection stopped submission. | Keep the six-character field editable, submit QR token in a hidden form field, and display server feedback for every scan. | Make scan behavior clear without exposing the QR secret or weakening event-day check-in rules. |
 
 ## Development notes
 
