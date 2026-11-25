@@ -14,7 +14,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - **Project:** EntryFlow — Event Registration and QR Check-in Management System
 - **Target:** Complete and verify all Level 1 requirements before starting Level 2
 - **Current phase:** Phase 7 — Level 1 verification and handoff (database is initialized; acceptance checks in progress)
-- **Last updated:** 2026-11-24
+- **Last updated:** 2026-11-25
 - **Overall status:** In progress; 9 of 11 acceptance checks currently verified, with short-code lookup and phone QR scan still unverified
 
 ## Phase 1 — Inspect and prepare
@@ -385,3 +385,4 @@ Use this log for items that affect multiple phases or need a single project-wide
 | 2026-11-24 | Deploy | Inspected Vercel build for `02b2730`; Prisma Client generation succeeded, then TypeScript reported `ticket` out of scope in `src/app/tickets/actions.ts`. Moved the resolved ticket code outside the `try` block. Local `npm.cmd run typecheck` and `npm.cmd run build` both pass; pushed fix is awaiting a new Vercel build. | Vercel build logs and local typecheck/production build output |
 | 2026-11-24 | Phase 7 | Completed registration at 360px emulated mobile viewport and confirmed the QR ticket was visible with no horizontal page overflow. Removed the temporary registration; database count confirmed zero matching records. Total: 7 of 11 checks pass. | Local production browser, Chrome responsive viewport set to 360px; database cleanup count 1, remaining count 0 |
 | 2026-11-24 | Phase 7 | Used the seeded Organizer account in the local browser. Verified valid check-in, repeat scan with the original time, made-up code rejection, attendee status, and totals. Removed the temporary attendee and same-day event; database cleanup confirmed one registration and one event removed with zero remaining fixture registrations. Signed out and dismissed Chrome's save-password prompt without saving. Total: 10 of 11 acceptance checks pass. | Local production browser and Supabase cleanup script; credential and ticket code omitted |
+| 2026-11-25 | Mobile UI | Added attendee photo cards with full-card links, mobile Home/Search navigation, and scroll-revealed navigation on event details. Added staff attendee list and detail, dedicated camera scan, and attendee search by name or code. A scan opens protected ticket review for explicit check-in. Local lint, typecheck, and production build pass. Device layout and camera retest remain open; desktop redesign and viewport transition motion are deferred until desktop references arrive. | Mobile SVG wireframes in `SVGs/`; source in `src/app`, `src/components`, and `src/lib` |

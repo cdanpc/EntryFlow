@@ -2,13 +2,15 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import type { IScannerControls } from "@zxing/browser";
+import { useRouter } from "next/navigation";
 import { checkInTicket, type CheckInState } from "@/app/staff/actions";
 import { CheckInResult } from "@/components/check-in-result";
 
-export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: boolean }) {
+export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId: string; enabled: boolean; scannerOnly?: boolean }) {
+  const router = useRouter();
   const action = checkInTicket.bind(null, eventId);
   const [state, formAction, pending] = useActionState(action, { kind: "idle", message: "" } satisfies CheckInState);
-  const [scanning, setScanning] = useState(false);
+  const [scanning, setScanning] = useState(scannerOnly);
   const [cameraError, setCameraError] = useState("");
   const [scanStatus, setScanStatus] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -38,6 +40,19 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
           detected = true;
           controlsRef.current?.stop();
           setScanning(false);
+          if (scannerOnly) {
+            const value = result.getText().trim();
+            let token = value;
+            if (/^https?:\/\//i.test(value)) {
+              try { token = /^\/tickets\/([A-Za-z0-9_-]{32,64})\/?$/.exec(new URL(value).pathname)?.[1] ?? ""; }
+              catch { token = ""; }
+            }
+            if (/^[A-Za-z0-9_-]{32,64}$/.test(token ?? "")) {
+              setScanStatus("Opening ticket…");
+              router.push(`/staff/verify/${token}`);
+            } else setCameraError("This is not an EntryFlow ticket QR. Try another code.");
+            return;
+          }
           if (scannedCodeRef.current && formRef.current) {
             scannedCodeRef.current.value = result.getText().trim();
             setScanStatus("QR read. Checking ticket…");
@@ -50,7 +65,9 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
         if (!cancelled) {
           setCameraError(error instanceof Error && error.message === "Camera scanning requires HTTPS and camera access."
             ? error.message
-            : "Camera unavailable. Allow camera access or enter the ticket code manually.");
+            : scannerOnly
+              ? "Camera unavailable. Allow camera access and try again."
+              : "Camera unavailable. Allow camera access or enter the ticket code manually.");
           setScanning(false);
         }
       }
@@ -62,7 +79,9 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
       controlsRef.current?.stop();
       controlsRef.current = null;
     };
-  }, [scanning, enabled, eventId]);
+  }, [scanning, enabled, eventId, scannerOnly, router]);
+
+  if (scannerOnly) return <section className="mobile-scanner" aria-label="QR scanner"><div className="scanner-frame">{scanning && <video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" />}{!scanning && <div className="scanner-idle">Camera paused</div>}<span className="scanner-corners" aria-hidden="true" /></div><p>Place the attendee&apos;s QR code inside the frame.</p><button className="camera-button" type="button" onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Start camera"}</button>{cameraError && <p className="field-error" role="alert">{cameraError}</p>}{scanStatus && <p role="status">{scanStatus}</p>}</section>;
 
   return (
     <form ref={formRef} action={formAction} className="checkin-form" aria-busy={pending}>

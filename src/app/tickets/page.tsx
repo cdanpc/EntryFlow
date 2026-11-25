@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { TicketLookupForm } from "@/components/ticket-lookup-form";
+import { MobileNav } from "@/components/mobile-nav";
 
 export default function FindTicketPage() {
   return (
@@ -9,6 +10,7 @@ export default function FindTicketPage() {
         <p className="eyebrow">TICKET LOOKUP</p><h1>Find your ticket.</h1><p className="lookup-intro">Enter the ticket code and the email or mobile number used when you registered.</p>
         <TicketLookupForm />
       </section>
+      <MobileNav role="attendee" current="search" />
     </main>
   );
 }

@@ -1,9 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { EventStatus, RegistrationStatus } from "@prisma/client";
 import { RegistrationForm } from "@/components/registration-form";
 import { formatCebuDateRange } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
+import { eventPhoto } from "@/lib/event-photo";
+import { MobileNav } from "@/components/mobile-nav";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +27,7 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ e
       <header className="detail-topbar"><Link href="/" className="back-link">← <span>All events</span></Link><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link><span className="topbar-spacer" /></header>
       <div className="detail-layout">
         <section className="detail-main">
-          <div className="detail-art" aria-hidden="true"><span>ENTRYFLOW COMMUNITY</span><b>e</b></div>
+          <div className="detail-art"><Image src={eventPhoto(event.id)} alt="Event gathering" fill sizes="(max-width: 760px) 100vw, 680px" /></div>
           <p className="eyebrow detail-eyebrow">EVENT DETAILS</p>
           <h1 className="detail-title">{event.title}</h1>
           <p className="detail-date">{formatCebuDateRange(event.startsAt, event.endsAt)}</p>
@@ -40,6 +43,7 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ e
           <p className="privacy-note">Your details are used to issue and retrieve your event ticket.</p>
         </aside>
       </div>
+      <MobileNav role="attendee" current="home" revealOnScroll />
     </main>
   );
 }

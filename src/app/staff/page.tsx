@@ -6,10 +6,11 @@ import { CheckInForm } from "@/components/check-in-form";
 import { manilaDateKey, manilaDayBounds } from "@/lib/manila-time";
 import { formatCebuDateRange } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
+import { MobileNav } from "@/components/mobile-nav";
 
 export const dynamic = "force-dynamic";
 
-export default async function StaffDashboard({ searchParams }: { searchParams: Promise<{ eventId?: string; q?: string; page?: string }> }) {
+export default async function StaffDashboard({ searchParams }: { searchParams: Promise<{ eventId?: string; q?: string; page?: string; status?: string }> }) {
   const session = await auth();
   if (!session?.user?.staffId) redirect("/staff/sign-in");
   const params = await searchParams;
@@ -38,6 +39,8 @@ export default async function StaffDashboard({ searchParams }: { searchParams: P
     select: { id: true, fullName: true, email: true, mobile: true, manualCode: true, status: true, registeredAt: true, checkedInAt: true },
     orderBy: { registeredAt: "desc" }, take: pageSize, skip: (currentPage - 1) * pageSize,
   }) : [];
+  const mobileStatus = params.status === "checked" ? RegistrationStatus.CHECKED_IN : params.status === "awaiting" ? RegistrationStatus.CONFIRMED : undefined;
+  const mobileRows = selected ? await prisma.registration.findMany({ where: { eventId: selected.id, status: mobileStatus ?? { in: [RegistrationStatus.CONFIRMED, RegistrationStatus.CHECKED_IN] } }, select: { id: true, fullName: true, status: true, checkedInAt: true }, orderBy: { registeredAt: "desc" }, take: 50 }) : [];
 
   async function logout() {
     "use server";
@@ -49,6 +52,7 @@ export default async function StaffDashboard({ searchParams }: { searchParams: P
       <header className="staff-header"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow <span className="staff-word">STAFF</span></Link><div className="staff-user"><span>{session.user.name ?? session.user.email}</span><form action={logout}><button type="submit" className="signout-button">Sign out</button></form></div></header>
       <section className="staff-content">
         <div className="staff-title"><div><p className="eyebrow">EVENT OPERATIONS</p><h1>Check-in &amp; attendees</h1></div><span className="role-pill">{session.user.role === "ORGANIZER" ? "Organizer" : "Door Staff"}</span></div>
+        <section className="staff-mobile-home" aria-label="Attendee overview"><div className="mobile-section-top"><h1>Attendees</h1><Link href="/staff/search" aria-label="Search attendees">Search</Link></div>{selected ? <><form method="get" className="mobile-event-picker"><label htmlFor="mobileEventId">Event</label><select id="mobileEventId" name="eventId" defaultValue={selected.id}>{events.map((event) => <option value={event.id} key={event.id}>{event.title}</option>)}</select><button type="submit">Select</button></form><div className="mobile-counts"><span>{selected._count.registrations} registered</span><span>{checkedIn} checked in</span><span>{selected._count.registrations - checkedIn} awaiting</span></div><div className="mobile-filter"><Link className={!mobileStatus ? "active" : ""} href={`/staff?eventId=${selected.id}`}>All</Link><Link className={mobileStatus === RegistrationStatus.CONFIRMED ? "active" : ""} href={`/staff?eventId=${selected.id}&status=awaiting`}>Awaiting</Link><Link className={mobileStatus === RegistrationStatus.CHECKED_IN ? "active" : ""} href={`/staff?eventId=${selected.id}&status=checked`}>Checked in</Link></div><div className="mobile-attendee-list">{mobileRows.map((record) => <Link key={record.id} href={`/staff/attendees/${record.id}`}><span>{record.fullName}</span><span className={record.status === RegistrationStatus.CHECKED_IN ? "row-checked" : "row-awaiting"}>{record.status === RegistrationStatus.CHECKED_IN ? "✓ Checked in" : "○ Awaiting"}</span></Link>)}{mobileRows.length === 0 && <p className="staff-empty">No attendees in this view.</p>}</div></> : <p className="staff-empty">No events are available.</p>}</section>
         <section className="staff-panel"><div className="panel-heading"><p className="eyebrow muted">SELECT EVENT</p><h2>Check-in desk</h2><p>Scan an attendee QR ticket with your camera, or enter the ticket code manually.</p></div>
           {events.length === 0 ? <p className="staff-empty">No events are available for staff operations.</p> : <><form className="event-picker" method="get"><label htmlFor="eventId">Event</label><select id="eventId" name="eventId" defaultValue={selected?.id}>{events.map((event) => <option value={event.id} key={event.id}>{event.title} · {formatCebuDateRange(event.startsAt, event.endsAt)}</option>)}</select><button type="submit">Select</button></form>{selected && <>{!canCheckIn && <p className="checkin-date-notice">This event is scheduled for {new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "long" }).format(selected.startsAt)}. You can scan a ticket now, but check-in opens on the event date.</p>}<CheckInForm eventId={selected.id} enabled={canCheckIn} /><div className="staff-stats"><div><span>Registered</span><strong>{selected._count.registrations} / {selected.capacity}</strong></div><div><span>Checked in</span><strong>{checkedIn} / {selected._count.registrations}</strong></div><div><span>Waitlisted</span><strong>{waitlisted}</strong></div></div></>}</>}
         </section>
@@ -57,6 +61,7 @@ export default async function StaffDashboard({ searchParams }: { searchParams: P
           <div className="pagination"><span>Page {currentPage} of {totalPages}</span><div>{currentPage > 1 && <Link href={`/staff?eventId=${selected.id}&q=${encodeURIComponent(search)}&page=${currentPage - 1}`}>Previous</Link>}{currentPage < totalPages && <Link href={`/staff?eventId=${selected.id}&q=${encodeURIComponent(search)}&page=${currentPage + 1}`}>Next</Link>}</div></div>
         </section>}
       </section>
+      <MobileNav role="staff" current="home" />
     </main>
   );
 }
