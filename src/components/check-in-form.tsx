@@ -15,7 +15,7 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
   const controlsRef = useRef<IScannerControls | null>(null);
 
   useEffect(() => {
-    if (!scanning || !enabled) return;
+    if (!scanning) return;
     let cancelled = false;
     let detected = false;
 
@@ -27,14 +27,15 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
         const { BrowserQRCodeReader } = await import("@zxing/browser");
         if (cancelled || !videoRef.current) return;
         const reader = new BrowserQRCodeReader();
-        const controls = await reader.decodeFromVideoDevice(undefined, videoRef.current, (result) => {
+        const controls = await reader.decodeFromConstraints({ video: { facingMode: { ideal: "environment" } } }, videoRef.current, (result) => {
           if (!result || cancelled || detected) return;
           detected = true;
           controlsRef.current?.stop();
           setScanning(false);
           if (inputRef.current && formRef.current) {
             inputRef.current.value = result.getText().trim();
-            formRef.current.requestSubmit();
+            if (enabled) formRef.current.requestSubmit();
+            else setCameraError("QR scanned. Check-in opens on the event date in Cebu.");
           }
         });
         if (cancelled || detected) controls.stop();
@@ -61,7 +62,7 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
     <form ref={formRef} action={formAction} className="checkin-form">
       <label htmlFor="ticketCode">Ticket code</label>
       <div className="checkin-entry"><input ref={inputRef} id="ticketCode" name="ticketCode" autoComplete="off" placeholder="Enter ticket code" required disabled={!enabled || pending} /><button type="submit" disabled={!enabled || pending}>{pending ? "Checking…" : "Check in"}</button></div>
-      <button className="camera-button" type="button" disabled={!enabled || pending} onClick={() => { setCameraError(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Scan QR with camera"}</button>
+      <button className="camera-button" type="button" disabled={pending} onClick={() => { setCameraError(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Scan QR with camera"}</button>
       {scanning && <div className="scanner-preview"><video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" /><p>Point the camera at the attendee&apos;s QR ticket.</p></div>}
       {cameraError && <p className="field-error" role="alert">{cameraError}</p>}
       {!enabled && <p className="field-hint">Check-in is available on the event date in Cebu.</p>}

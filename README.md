@@ -38,7 +38,7 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
-| L1-02 | Scan QR with the Door Staff phone camera; decoded secret is accepted for check-in | Not Run | Camera scanner implemented; real-phone scan and check-in still need verification. |
+| L1-02 | Scan QR with the Door Staff phone camera; decoded secret is accepted for check-in | Not Run | Camera can now read tickets before event day; actual check-in still requires a same-day event and a real-phone scan. |
 | L1-03 | Refresh and retrieve ticket with six-character code and email | Not Run | Previous lookup verification used the former long code; recheck the new manual-code flow. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |

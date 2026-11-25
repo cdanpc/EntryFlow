@@ -311,7 +311,7 @@ For each issue or change, add a short description, date, related phase, and curr
 | Test | Expected result | Result (Pass / Fail / Not Run) | Evidence / notes |
 |---|---|---|---|
 | L1-01 Register on phone viewport | Ticket page appears with QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. Test attendee was removed afterward. |
-| L1-02 Scan QR with Door Staff phone camera | Decoded QR secret is accepted by check-in | Not Run | Camera scanner implemented; real-phone scan and check-in still need verification. |
+| L1-02 Scan QR with Door Staff phone camera | Decoded QR secret is accepted by check-in | Not Run | Camera can now read tickets before event day; actual check-in still requires a same-day event and a real-phone scan. |
 | L1-03 Refresh and retrieve | Six-character code and email return ticket | Not Run | Prior verification used the former long code; retest the revised lookup flow. |
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
 | L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
