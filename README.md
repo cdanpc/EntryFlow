@@ -22,6 +22,8 @@ Brand marks use the supplied `Logo/Glossy Blue E Arrow Logo.png` through the reu
 
 Main page surfaces and the desktop sidebar use white. Shared blue shadow tokens provide restrained elevation on fields and cards, while focus rings remain visible. Sign-in links/buttons use the same 7px action radius; the sign-in card includes Back to home above its title on desktop and mobile.
 
+Back links use zero top/bottom margins. Sign-in and attendee-detail cards use compact top padding, and event details reduces the empty space before Back to events. Compact screens retain a 44px Back-link touch area; desktop uses a 32px link row.
+
 ### Event browsing
 
 Search upcoming events by title or place. Results appear in soonest-first date order. The date and sorting dropdowns were removed following design review; old date/sort URL parameters no longer filter results. Remaining spots count only confirmed and checked-in registrations and are a display snapshot; registration still enforces capacity in the database.
