@@ -61,6 +61,10 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 .brand{font-weight:800;letter-spacing:-.9px}
 .section-heading h2{font-weight:800}
 .detail-topbar{display:flex;align-items:center;justify-content:center}
+.detail-topbar.sign-in-topbar{justify-content:flex-start}
+.staff-detail-card .ticket-status.status-checked_in,.staff-verify-panel .ticket-status.status-checked_in{padding:0;border-radius:0;background:transparent;color:#216a4b;font-size:inherit}
+.checkin-result.result-success,.checkin-result.result-repeat{padding:0;background:transparent;color:var(--ink)}
+.checkin-result.result-success strong,.checkin-result.result-repeat strong{color:#216a4b}
 .staff-account{position:relative;z-index:60}
 .staff-account summary{display:flex;align-items:center;justify-content:center;gap:5px;min-width:80px;min-height:40px;padding:0 12px;border:1px solid #d6e8ee;border-radius:999px;background:#f1f9fb;color:var(--navy);font-size:13px;font-weight:750;cursor:pointer;list-style:none}
 .staff-account summary::-webkit-details-marker{display:none}
@@ -94,3 +98,28 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
   .sign-in-panel{margin-top:clamp(28px,8vh,54px)}
   .sign-in-panel h1{font-size:34px}
 }
+.staff-directory .staff-content{padding-bottom:130px}
+.staff-attendees-panel,.desktop-checkin{padding:24px;border:1px solid var(--line);border-radius:13px;background:#fff;margin-bottom:24px}
+.staff-attendees-panel h1{margin:0 0 20px;font-size:28px;letter-spacing:-.8px;font-weight:800}
+.staff-attendees-panel .mobile-event-picker{display:grid;grid-template-columns:1fr;gap:7px;max-width:600px;margin:0 0 16px}
+.mobile-counts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.mobile-counts span{padding:7px 9px;border-radius:7px;background:#f2f8fa;color:#385b6a;font-size:12px}
+.attendee-search{display:flex;align-items:center;border:1px solid #cddde3;border-radius:9px;background:#fff;margin:0 0 12px;max-width:600px}
+.attendee-search:focus-within{outline:3px solid #08cbe033;border-color:var(--blue)}
+.attendee-search input{width:100%;min-width:0;min-height:46px;border:0;outline:0;padding:0 12px;border-radius:9px;background:transparent;font:inherit;font-size:16px;color:var(--navy)}
+.attendee-search button,.pagination button{min-height:44px;padding:0 12px;border:0;border-radius:7px;background:transparent;color:var(--blue);font:inherit;font-size:13px;cursor:pointer}
+.pagination button:disabled{opacity:.45;cursor:default}
+.attendee-filters{display:flex;gap:6px;margin:0 0 8px}
+.attendee-filters button{min-height:44px;padding:8px 13px;border:0;border-radius:24px;background:transparent;color:#526f7c;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.attendee-filters button.active{background:#eaf6f9;color:var(--blue)}
+.attendee-feedback{min-height:28px;font-size:12px;color:var(--muted)}
+.staff-responsive-table td:first-child a{display:inline-flex;align-items:center;min-height:44px;font-weight:400}
+.mobile-nav.staff-dock{display:block;position:fixed;z-index:50;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);width:max-content;max-width:calc(100vw - 24px);filter:drop-shadow(0 8px 18px #102b3d24)}
+.staff-dock .mobile-nav-inner{display:flex;gap:4px;padding:5px;border:1px solid var(--line);border-radius:999px;background:#fff}
+.staff-dock a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:82px;min-height:54px;padding:5px 10px;border-radius:999px;font-size:11px;font-weight:650;color:#526f7c}
+.staff-dock svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.staff-dock a.active{background:#eaf6f9;color:var(--blue)}
+.staff-dock a.primary-scan{background:var(--blue);color:#fff;min-width:88px}
+.staff-dock a.primary-scan.active{background:#066b9a;outline:2px solid var(--cyan);outline-offset:1px}
+@media(max-width:1024px){.staff-responsive-table thead{display:none}.staff-responsive-table,.staff-responsive-table tbody{display:block;width:100%}.staff-responsive-table tr{display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);padding:8px 0}.staff-responsive-table td{display:block;padding:0;border:0}.staff-responsive-table td:before{display:none}.staff-responsive-table td:not(:first-child):not(:last-child){display:none}.staff-responsive-table td:first-child{flex:1;min-width:0}.staff-responsive-table td:last-child{flex-shrink:0}.staff-responsive-table tr td:first-child a{overflow-wrap:anywhere}.staff-attendees-panel{padding:20px 16px}.desktop-checkin{display:none}.staff-directory .staff-content{padding:20px 16px 130px}.staff-directory .staff-attendees-panel{padding:0;border:0;background:transparent}.staff-attendees-panel h1{font-size:25px}}
+@media(max-width:1024px){.staff-activity .staff-responsive-table tr{flex-wrap:wrap}.staff-activity .staff-responsive-table td[data-label="Checked in"]{display:block;flex-basis:100%;order:3;color:var(--muted);font-size:12px}.staff-activity .staff-responsive-table td[data-label="Checked in"]:before{display:inline;content:"Checked in: ";font-weight:400}}
