@@ -1,14 +1,9 @@
-import { PrismaClient, EventStatus, StaffRole } from "@prisma/client";
-import { hash } from "bcryptjs";
+import { PrismaClient, EventStatus } from "@prisma/client";
+import { seedStaff } from "./seed-staff";
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const password = process.env.DEMO_STAFF_PASSWORD;
-  if (!password || password.length < 12) {
-    throw new Error("Set DEMO_STAFF_PASSWORD to a local password of at least 12 characters before seeding.");
-  }
-
   const now = new Date();
   const eventDate = (daysAhead: number, hour: number) => {
     const manilaValue = new Date(now.getTime() + 8 * 60 * 60 * 1000);
@@ -54,12 +49,7 @@ async function main() {
     await prisma.event.upsert({ where: { id: event.id }, update: event, create: event });
   }
 
-  const passwordHash = await hash(password, 12);
-  await prisma.staffUser.upsert({
-    where: { username: "organizer" },
-    update: { name: "Demo Organizer", passwordHash, role: StaffRole.ORGANIZER },
-    create: { name: "Demo Organizer", username: "organizer", passwordHash, role: StaffRole.ORGANIZER },
-  });
+  await seedStaff(prisma);
 
   // Keep one confirmed ticket on the third event so it reliably exercises the full state.
   await prisma.registration.upsert({

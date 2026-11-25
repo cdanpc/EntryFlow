@@ -21,7 +21,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 
 - Responsive public event list and event details, with Cebu-local date/time display and availability counts.
 - Guest registration form with server-side name, email, and Philippine mobile validation.
-- PostgreSQL/Prisma data model, migration, and demo seed data for two events and one full event.
+- PostgreSQL/Prisma data model, migration, and demo seed data for two events, one full event, and Organizer and Door Staff accounts.
 - Duplicate active registration prevention and a transaction that locks the event while checking capacity.
 - A six-character, database-unique manual ticket code plus a separate cryptographically random QR and ticket-URL secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code or QR secret.
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
@@ -71,7 +71,7 @@ The project plan recommends Next.js + TypeScript, PostgreSQL, Prisma, Auth.js Cr
 ## Local setup
 
 1. Create a PostgreSQL database named `entryflow` (or choose another database and update the connection string).
-2. Copy `.env.example` to `.env` and set a working database URL, a long random `AUTH_SECRET`, and a local-only `DEMO_STAFF_PASSWORD` of at least 12 characters.
+2. Copy `.env.example` to `.env` and set a working database URL, a long random `AUTH_SECRET`, `DEMO_ORGANIZER_PASSWORD`, and `DEMO_DOOR_STAFF_PASSWORD`.
 
    PowerShell:
 
@@ -101,7 +101,15 @@ The `postinstall` and `build` scripts regenerate Prisma Client from `prisma/sche
    npm.cmd run dev
    ```
 
-6. Open the local URL printed by Next.js. The seeded staff username is `organizer`; its password is the value configured as `DEMO_STAFF_PASSWORD`. The seed stores only a bcrypt hash. Do not use this demo password in production.
+6. Open the local URL printed by Next.js. The demo usernames are `organizer` (Organizer role) and `staff` (Door Staff role). Their passwords come from `DEMO_ORGANIZER_PASSWORD` and `DEMO_DOOR_STAFF_PASSWORD`. The seed stores only bcrypt hashes. Use demo passwords only for assessment and replace them before real use.
+
+For an existing database, seed only the two accounts without changing demo events:
+
+```powershell
+npm.cmd run db:seed:staff
+```
+
+Pushing code to GitHub does not run this command on Vercel. Set the two password variables in the environment that runs the seed, and run the command once against the database configured for the Vercel deployment.
 
 ## Checks
 
@@ -127,7 +135,7 @@ Verified in the current workspace:
 - `npm.cmd run db:generate` — passed after adding the manual ticket code field.
 - `npm.cmd exec -- prisma migrate deploy` — passed; manual codes were backfilled and the unique constraint applied.
 - Latest short-code revision — `npm.cmd run typecheck` and `npm.cmd run build` passed after fixing the Vercel-reported ticket lookup scope error. Unit and acceptance tests for short-code behavior remain pending.
-- `npm.cmd run db:seed` — passed; three demo events and one Organizer account seeded.
+- `npm.cmd run db:seed:staff` — passed; Organizer and Door Staff accounts seeded in the configured database.
 - Local production smoke check — event list, event details, ticket lookup, staff sign-in, and Auth.js session returned HTTP 200; unauthenticated staff dashboard returned HTTP 307.
 - Local production browser acceptance checks — successful registration displayed a confirmed ticket and QR; matching email retrieved it; a mismatched contact showed a generic not-found message; duplicate registration was rejected. The disposable registration was deleted and its absence confirmed.
 - Local production browser checks — refreshing a ticket URL retained the confirmed ticket and QR; invalid email and 10-digit mobile returned field-specific messages. The temporary registration was removed and its absence confirmed.

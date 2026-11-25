@@ -65,7 +65,7 @@ For each issue or change, add a short description, date, related phase, and curr
 - [x] Define relationships, constraints, and indexes.
 - [x] Add database migrations. *(Initial migration applied to Supabase.)*
 - [x] Add repeatable seed data for at least two events, including one full event. *(Verified three events.)*
-- [x] Add a demo staff account with a securely hashed password. *(One Organizer account seeded.)*
+- [x] Add demo Organizer and Door Staff accounts with securely hashed passwords. *(Both roles supported by the account-only seed; deployment database verification pending.)*
 - [ ] Establish shared server-side validation and error handling.
 - [ ] Establish structured logging that avoids sensitive information.
 - [ ] Establish design tokens for colors, typography, spacing, borders, and states.
