@@ -20,6 +20,12 @@ Public event details uses the shared Home/Find Ticket header. Back to events app
 
 Brand marks use the supplied `Logo/Glossy Blue E Arrow Logo.png` through the reusable `BrandLogo` component. Next.js optimizes the image for display; CSS frames its white margins without altering the source artwork. Header, staff home, sidebar, sign-in, ticket, and footer branding share this asset.
 
+### Event browsing
+
+Search events by title or place. Date and Sort by dropdowns sit below search and apply on selection, preserving the search text in the URL. Date offers All upcoming, Today, Next 7 days, and Next 30 days; windows end at Cebu midnight and never include past start times. Sort by offers date soonest/latest, name A–Z/Z–A, and remaining spots highest/lowest. Remaining spots count only confirmed and checked-in registrations, clamp at zero, and are a display snapshot; registration still enforces capacity in the database.
+
+Desktop search expands toward the left up to 780px, and the blank strip above Events is reduced from 48px to 20px. Controls stack on narrow screens. If filters return no events, the empty state offers Reset filters.
+
 The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
 
 References: `SVGs/attendee - home.svg` and `SVGs/Staff - Home.svg`. Browser visual verification remains pending because the browser access host is unavailable.
