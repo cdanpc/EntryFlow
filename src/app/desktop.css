@@ -1,0 +1,148 @@
+/* Desktop references use a narrow rail. The compact layouts stay in globals.css. */
+.mobile-nav .desktop-nav-brand,
+.mobile-nav .desktop-nav-item,
+.mobile-nav.desktop-only-nav { display: none; }
+
+@media (min-width: 1025px) {
+  :root { --sidebar-width: 104px; }
+  body { background: var(--white); }
+
+  .site-shell, .detail-shell, .ticket-page {
+    max-width: none;
+    min-height: 100dvh;
+    margin: 0 0 0 var(--sidebar-width);
+    padding: 0 32px 48px;
+  }
+  .staff-shell {
+    margin-left: var(--sidebar-width);
+    min-height: 100dvh;
+    background: var(--white);
+  }
+
+  .mobile-nav, .mobile-nav.staff-dock, .mobile-nav.desktop-only-nav {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--sidebar-width);
+    max-width: none;
+    height: 100dvh;
+    padding: 20px 10px;
+    border-right: 1px solid var(--line);
+    background: #f5f8fa;
+    transform: none;
+    filter: none;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 50;
+    overflow-y: auto;
+  }
+  .mobile-nav .desktop-nav-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    gap: 6px;
+    min-height: 76px;
+    padding: 0;
+    color: var(--navy);
+    font-size: 12px;
+    font-weight: 800;
+    border-radius: 0;
+  }
+  .desktop-nav-brand .brand-mark { width: 38px; height: 38px; font-size: 22px; border-radius: 11px; }
+  .mobile-nav .mobile-nav-inner {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 0 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .mobile-nav .mobile-nav-inner > a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    min-height: 72px;
+    padding: 10px 4px;
+    border-radius: 12px;
+    color: #526f7c;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-align: center;
+    transition: background 180ms ease, color 180ms ease;
+  }
+  .mobile-nav .mobile-nav-inner > a:hover { background: #e8f0f4; color: var(--navy); }
+  .mobile-nav .mobile-nav-inner > a.active { background: #e4f3f8; color: var(--blue); }
+  .mobile-nav .mobile-nav-inner > .desktop-nav-signin { margin-top: auto; }
+  .mobile-nav svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .mobile-nav a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+  .staff-dock .mobile-nav-inner { padding-bottom: 72px; }
+
+  /* Home keeps the reference's content-first event grid. */
+  .attendee-home .intro, .attendee-home .footer,
+  .attendee-header .brand, .attendee-header nav, .attendee-header .staff-link,
+  .detail-topbar > .brand { display: none; }
+  .attendee-header.topbar, .detail-topbar { height: 48px; border: 0; }
+  .attendee-home .events-section { padding: 0 0 48px; }
+  .attendee-home .section-heading { align-items: center; gap: 24px; margin-bottom: 24px; }
+  .attendee-home .section-heading .eyebrow { display: none; }
+  .attendee-home .section-heading h2 { margin: 0; font-size: 28px; font-weight: 800; }
+  .attendee-home .event-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 16px; }
+  .attendee-home .event-card { display: flex; flex-direction: column; border-radius: 15px; box-shadow: none; }
+  .attendee-home .event-art { height: auto; aspect-ratio: 1 / 1; }
+  .attendee-home .event-content { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 18px; }
+  .attendee-home .event-date { margin: 0; font-size: 12px; }
+  .attendee-home .event-content h3 { font-size: 18px; line-height: 1.35; }
+  .attendee-home .event-description { display: none; }
+  .attendee-home .venue { display: block; padding: 0; border: 0; font-size: 13px; }
+  .attendee-home .event-footer { margin-top: auto; padding-top: 12px; }
+  .attendee-home .availability { font-size: 12px; }
+  .attendee-home .event-art img { transition: transform 200ms ease; }
+  .attendee-home .event-card:hover .event-art img { transform: scale(1.025); }
+
+  /* Staff uses the same rail and an uncluttered list workspace. */
+  .staff-header { height: 0; padding: 0; border: 0; background: transparent; }
+  .staff-header > .brand { display: none; }
+  .staff-account { position: fixed; left: 12px; bottom: 24px; z-index: 60; }
+  .staff-account summary { min-width: 80px; max-width: 80px; min-height: 44px; padding: 0 6px; font-size: 11px; }
+  .staff-account-menu { top: auto; bottom: 0; left: calc(100% + 12px); right: auto; }
+  .staff-directory .staff-content { max-width: 1600px; padding: 48px 40px 64px; margin: 0 auto; }
+  .staff-attendees-panel { margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+  .staff-attendees-panel h1 { margin: 0 0 24px; font-size: 28px; }
+  .staff-attendees-panel .staff-summary { display: none; }
+  .staff-attendees-panel .mobile-event-picker { max-width: 520px; }
+  .staff-attendees-panel .attendee-search { max-width: 520px; }
+  .staff-desktop-results { margin-top: 20px; }
+  .staff-responsive-table th { padding: 12px 16px; background: #f7fafb; font-size: 11px; }
+  .staff-responsive-table td { padding: 8px 16px; font-size: 14px; }
+  .staff-responsive-table th:last-child, .staff-responsive-table td:last-child { text-align: right; }
+  .staff-responsive-table tr:hover td { background: #f7fbfc; }
+  .staff-responsive-table td:first-child a:hover { color: var(--blue); text-decoration: underline; }
+  .staff-responsive-table code { font-size: 12px; }
+  .desktop-checkin { max-width: 640px; margin: 48px 0 0; padding: 24px; scroll-margin-top: 24px; }
+  .desktop-checkin h2 { margin: 0 0 18px; font-size: 20px; }
+  .staff-scan-page .mobile-scanner { margin-top: 12vh; }
+  .staff-detail-card { margin-top: 48px; }
+  .staff-verify-panel { margin-top: 0; }
+  .detail-layout { max-width: 1200px; margin: 0 auto; padding-top: 0; }
+  .ticket-topbar { margin: 0; padding: 0; }
+  .lookup-panel { margin-top: 24px; }
+  .loading-dots-overlay { left: var(--sidebar-width); }
+}
+
+@media (min-width: 1280px) { .attendee-home .event-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 1440px) { .attendee-home .event-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+@media (min-width: 1920px) { .attendee-home .events-section { max-width: 1800px; margin-inline: auto; } }
+@media (prefers-reduced-motion: reduce) {
+  .mobile-nav .mobile-nav-inner > a, .attendee-home .event-art img { transition: none; }
+  .attendee-home .event-card:hover .event-art img { transform: none; }
+}
+@media print { .mobile-nav { display: none !important; } .ticket-page { margin: 0; } }

@@ -7,6 +7,7 @@ import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatCebuDateRange } from "@/lib/format";
 import { auth } from "@/auth";
+import { MobileNav } from "@/components/mobile-nav";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -45,6 +46,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
         <Link className="lookup-back" href="/tickets">Find another ticket</Link>
         <div className="ticket-staff-link"><Link href={staffHref}>Staff: Sign in to verify</Link></div>
       </article>
+      <MobileNav role="attendee" current="search" desktopOnly />
     </main>
   );
 }

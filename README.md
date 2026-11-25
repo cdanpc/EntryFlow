@@ -12,6 +12,14 @@ This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverles
 
 ## Staff attendee workspace
 
+### Desktop layout
+
+Above 1024px, the mobile navigation becomes a fixed left sidebar based on the supplied desktop SVGs. Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, Activity, and a Manual entry link to the existing check-in form. The staff role/sign-out menu sits at the bottom of the rail. Event selection is carried in staff navigation links.
+
+The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
+
+References: `SVGs/attendee - home.svg` and `SVGs/Staff - Home.svg`. Browser visual verification remains pending because the browser access host is unavailable.
+
 Staff land on Attendees. Choose an event, then search by partial name or ticket code. Matching is case-insensitive and updates after a 300 ms pause. All, Awaiting, and Checked in filters combine with search. Clear resets the query; paging shows 50 results at a time. Organizer All also includes waitlisted and cancelled registrations.
 
 The dock links to Attendees, Scan, and Activity; only the current page is highlighted. Selected events travel in navigation URLs, with a tab-local fallback. Activity shows the event's latest check-ins, rather than a personal staff audit log. The former `/staff/search` URL redirects to Attendees.
