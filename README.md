@@ -25,7 +25,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Duplicate active registration prevention and a transaction that locks the event while checking capacity.
 - A six-character, database-unique manual ticket code plus a separate cryptographically random QR and ticket-URL secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code or QR secret.
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
-- Staff check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result.
+- Staff camera QR scanning and manual-code check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
 - PostgreSQL-backed, cross-instance rate limits for ticket lookup, staff sign-in, and check-in. Rate-limit subjects are HMAC-hashed before storage.
 - Basic security response headers and no-store caching for staff and ticket pages.
@@ -38,7 +38,7 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
-| L1-02 | Scan QR with a phone QR reader; decoded secret is accepted for check-in | Not Run | — |
+| L1-02 | Scan QR with the Door Staff phone camera; decoded secret is accepted for check-in | Not Run | Camera scanner implemented; real-phone scan and check-in still need verification. |
 | L1-03 | Refresh and retrieve ticket with six-character code and email | Not Run | Previous lookup verification used the former long code; recheck the new manual-code flow. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
