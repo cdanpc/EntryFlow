@@ -11,7 +11,7 @@ export function TicketVerifyForm({ eventId, ticketCode }: { eventId: string; tic
   return (
     <form action={formAction} className="checkin-form" aria-busy={pending}>
       <input type="hidden" name="ticketCode" value={ticketCode} />
-      <button className="submit-button" type="submit" disabled={pending}>{pending ? "Checking ticket…" : "Check In"}</button>
+      {state.kind !== "success" && state.kind !== "repeat" && <button className="submit-button" type="submit" disabled={pending}>{pending ? "Checking ticket…" : "Check In"}</button>}
       <CheckInResult state={state} />
     </form>
   );

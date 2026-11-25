@@ -16,7 +16,7 @@ export default async function StaffVerifyPage({ params }: { params: Promise<{ ti
 
   const ticket = await prisma.registration.findUnique({
     where: { ticketCode },
-    select: { fullName: true, manualCode: true, status: true, eventId: true, event: { select: { title: true, venue: true, startsAt: true, endsAt: true } } },
+    select: { fullName: true, manualCode: true, status: true, checkedInAt: true, eventId: true, event: { select: { title: true, venue: true, startsAt: true, endsAt: true } } },
   });
   if (!ticket) notFound();
 
@@ -27,8 +27,8 @@ export default async function StaffVerifyPage({ params }: { params: Promise<{ ti
         <p className="eyebrow">STAFF VERIFICATION</p>
         <h1>Verify ticket</h1>
         <p className="lookup-intro">Review this ticket before recording entry.</p>
-        <dl className="verify-details"><div><dt>Attendee</dt><dd>{ticket.fullName}</dd></div><div><dt>Event</dt><dd>{ticket.event.title}</dd></div><div><dt>Date and time</dt><dd>{formatCebuDateRange(ticket.event.startsAt, ticket.event.endsAt)}</dd></div><div><dt>Venue</dt><dd>{ticket.event.venue}</dd></div><div><dt>Manual code</dt><dd><code>{ticket.manualCode}</code></dd></div><div><dt>Status</dt><dd>{ticket.status === "CHECKED_IN" ? "Already checked in" : ticket.status === "CONFIRMED" ? "Confirmed" : ticket.status}</dd></div></dl>
-        <TicketVerifyForm eventId={ticket.eventId} ticketCode={ticketCode} />
+        <dl className="verify-details"><div><dt>Attendee</dt><dd>{ticket.fullName}</dd></div><div><dt>Event</dt><dd>{ticket.event.title}</dd></div><div><dt>Date and time</dt><dd>{formatCebuDateRange(ticket.event.startsAt, ticket.event.endsAt)}</dd></div><div><dt>Venue</dt><dd>{ticket.event.venue}</dd></div><div><dt>Manual code</dt><dd><code>{ticket.manualCode}</code></dd></div><div><dt>Status</dt><dd><span className={`ticket-status status-${ticket.status.toLowerCase()}`}>{ticket.status === "CHECKED_IN" ? "Already checked in" : ticket.status === "CONFIRMED" ? "Confirmed" : ticket.status}</span></dd></div>{ticket.checkedInAt && <div><dt>Checked in at</dt><dd>{new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" }).format(ticket.checkedInAt)}</dd></div>}</dl>
+        {ticket.status === "CONFIRMED" && <TicketVerifyForm eventId={ticket.eventId} ticketCode={ticketCode} />}
       </section>
     </main>
   );
