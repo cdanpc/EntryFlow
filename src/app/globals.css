@@ -61,6 +61,10 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 .brand{font-weight:800;letter-spacing:-.9px}
 .section-heading h2{font-weight:800}
 .detail-topbar{display:flex;align-items:center;justify-content:center}
+.detail-topbar.sign-in-topbar{justify-content:flex-start}
+.staff-detail-card .ticket-status.status-checked_in,.staff-verify-panel .ticket-status.status-checked_in{padding:0;border-radius:0;background:transparent;color:#216a4b;font-size:inherit}
+.checkin-result.result-success,.checkin-result.result-repeat{padding:0;background:transparent;color:var(--ink)}
+.checkin-result.result-success strong,.checkin-result.result-repeat strong{color:#216a4b}
 .staff-account{position:relative;z-index:60}
 .staff-account summary{display:flex;align-items:center;justify-content:center;gap:5px;min-width:80px;min-height:40px;padding:0 12px;border:1px solid #d6e8ee;border-radius:999px;background:#f1f9fb;color:var(--navy);font-size:13px;font-weight:750;cursor:pointer;list-style:none}
 .staff-account summary::-webkit-details-marker{display:none}

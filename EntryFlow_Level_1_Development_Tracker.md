@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Aligned sign-in branding to the left. Staff checked-in status and success/repeat results now use green status text without a green badge or result background. Lint and typecheck pass; visual review pending.
+
 - 2026-11-26: Added event search by title/place beside Events, removed the event count, changed attendee navigation to Find Ticket with a ticket icon, and shared the Home header with Find Ticket. The sign-in link now reads Sign in. Lint and typecheck pass; mobile visual review remains pending.
 
 | Date | Phase | Work completed / decision | References / evidence |
