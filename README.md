@@ -14,7 +14,7 @@ This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverles
 
 ### Desktop layout
 
-Above 1024px, the mobile navigation becomes a fixed left sidebar based on the supplied desktop SVGs. Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector, with search using twice the selector's share of the available width. Staff attendee details has a Back link inside the card above its label on desktop and mobile, returning to the same event's list.
+Above 1024px, the mobile navigation becomes a fixed 78px left sidebar (25% narrower than the original 104px rail). Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail and adapts to the narrower width. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector, with search using twice the selector's share of the available width. Staff attendee details has a Back link inside the card above its label on desktop and mobile, returning to the same event's list.
 
 Public event details uses the shared Home/Find Ticket header. Back to events appears above the event photo on mobile, tablet, and desktop; the compact floating navigation still appears after scrolling.
 
@@ -26,9 +26,9 @@ Back links use zero top/bottom margins. Sign-in and attendee-detail cards use co
 
 ### Event browsing
 
-Search upcoming events by title or place. Results appear in soonest-first date order. The date and sorting dropdowns were removed following design review; old date/sort URL parameters no longer filter results. Remaining spots count only confirmed and checked-in registrations and are a display snapshot; registration still enforces capacity in the database.
+Search upcoming events by title or place. One visible Filter button opens a compact dropdown containing alphabetical/date/slot ordering, an inclusive 0–100 remaining-slots range, and date windows for today or the next 7/30 days in Cebu time. Apply submits the combined choices and search text; Reset clears the criteria while preserving the submitted search. Escape and outside click close the panel. Filter state is encoded in the URL and invalid values safely fall back to defaults. Remaining slots count confirmed and checked-in registrations and clamp at zero; registration still enforces authoritative database capacity.
 
-Desktop search expands toward the left up to 780px, and the blank strip above Events is reduced from 48px to 20px. Search stacks on narrow screens. An unsuccessful search offers Clear search.
+Desktop places Events, centered search (up to 640px), and Filter in one row. Mobile puts search and Filter in one row below Events. The blank strip above Events remains 20px on desktop. No-match results offer Reset search and filters.
 
 The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
 

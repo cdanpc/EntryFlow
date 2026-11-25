@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Added a single Filter disclosure beside event search with order, inclusive 0–100 remaining-slot range, and Cebu date-window criteria. Desktop aligns Events, centered search, and Filter in one row; compact layouts place search/Filter together below Events. Reduced the desktop sidebar 25% from 104px to 78px, including role-menu fitting. All 30 tests, lint, typecheck, and production build pass; browser visual checks remain pending because browser access is unavailable.
+
 - 2026-11-26: Minimized vertical spacing around all Back/return link styles: zero outer margins, reduced detail/sign-in card top padding, no extra heading margin after sign-in Back, and a tighter event-detail top strip. Kept compact touch areas at 44px while desktop Back rows use 32px. Lint, typecheck, and production build pass; browser visual check remains pending.
 
 - 2026-11-26: Unified sidebar/main backgrounds to white, applied very faint EntryFlow-blue shadows to fields/cards using shared tokens, preserved focus feedback, and matched Sign in action corners at 7px. Added Back to home inside the sign-in card above its title on desktop/mobile. Removed public event date/sort dropdowns and their unused helpers/tests at user request; search and soonest-first ordering remain, and legacy filter parameters are ignored. All 21 remaining tests, lint, typecheck, and production build pass. Browser visual verification remains pending.
