@@ -49,6 +49,14 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 @media print{body{background:white}.ticket-page{padding:0}.ticket-topbar,.ticket-help,.ticket-card>.lookup-back{display:none}.ticket-card{margin:0 auto;box-shadow:none;border:1px solid #bbb}.ticket-qr img{width:210px;height:210px}}
 
 /* Updated typography and compact navigation */
+.event-search{display:flex;align-items:center;min-width:0;width:300px;max-width:65%;border:1px solid #cddde3;border-radius:9px;background:#fff;overflow:hidden}
+.event-search:focus-within{outline:3px solid #08cbe033;border-color:var(--blue)}
+.event-search input{width:100%;min-width:0;min-height:44px;padding:0 0 0 12px;border:0;outline:0;background:transparent;color:var(--navy);font:inherit;font-size:14px}
+.event-search input::placeholder{color:#879da8}
+.event-search button{display:grid;place-items:center;flex-shrink:0;width:44px;min-height:44px;border:0;background:transparent;color:var(--blue);cursor:pointer}
+.event-search button:focus-visible{outline:2px solid var(--blue);outline-offset:-3px}
+.event-search svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+@media(max-width:760px){.attendee-header.topbar{height:56px}.attendee-header.topbar nav{display:none}.attendee-header.topbar .brand{font-size:20px}.attendee-header.topbar .staff-link{font-size:12px;min-height:36px;padding:0 11px;border:1px solid #d5e9ee;border-radius:999px;background:#fff}.site-shell.attendee-ticket-search{padding:0 16px 118px}.attendee-home .section-heading{align-items:center;gap:16px}.event-search{max-width:68%;width:240px}.event-search input{font-size:13px}}
 :root{--font-sans:"Segoe UI Variable","Aptos",system-ui,-apple-system,"Segoe UI",sans-serif}
 .brand{font-weight:800;letter-spacing:-.9px}
 .section-heading h2{font-weight:800}

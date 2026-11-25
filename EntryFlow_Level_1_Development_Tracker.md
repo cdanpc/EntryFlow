@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Added event search by title/place beside Events, removed the event count, changed attendee navigation to Find Ticket with a ticket icon, and shared the Home header with Find Ticket. The sign-in link now reads Sign in. Lint and typecheck pass; mobile visual review remains pending.
+
 | Date | Phase | Work completed / decision | References / evidence |
 |---|---|---|---|
 | 2026-11-24 | Phases 1–6 | Created the Next.js/Prisma foundation, attendee registration and ticket flow, staff sign-in, manual check-in, and Organizer attendee list. Clean install and Prisma Client generation passed. Typecheck, lint, all 3 unit tests, and production build passed. PostgreSQL migration, seed, and database-backed acceptance checks remain pending. | Source files in workspace; command outputs in development session |
