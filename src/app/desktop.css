@@ -2,9 +2,12 @@
 .mobile-nav .desktop-nav-brand,
 .mobile-nav .desktop-nav-item,
 .mobile-nav.desktop-only-nav { display: none; }
-.attendee-detail-back, .event-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin: 0 0 12px; color: #000; font-size: 14px; transition: color 180ms ease; }
+.attendee-detail-back, .event-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin: 0; color: #000; font-size: 14px; line-height: 1.4; transition: color 180ms ease; }
 .attendee-detail-back:hover, .event-detail-back:hover { color: var(--blue); }
-@media (max-width: 760px) { .site-shell.attendee-event-details { padding: 0 16px 118px; } .attendee-event-details .detail-layout { padding-top: 12px; } }
+.back-link, .lookup-back, .lookup-panel .lookup-back { margin-block: 0; }
+.sign-in-panel, .staff-detail-card { padding-top: 12px; }
+.sign-in-panel > .attendee-detail-back + h1 { margin-top: 0; }
+@media (max-width: 760px) { .site-shell.attendee-event-details { padding: 0 16px 118px; } .attendee-event-details .detail-layout { padding-top: 4px; } }
 
 @media (min-width: 1025px) {
   :root { --sidebar-width: 104px; }
@@ -95,6 +98,9 @@
   .detail-topbar > .brand { display: none; }
   .attendee-header.topbar, .detail-topbar { height: 48px; border: 0; }
   .attendee-home .attendee-header.topbar { height: 20px; }
+  .attendee-event-details .attendee-header.topbar { height: 20px; }
+  .attendee-detail-back, .event-detail-back { min-height: 32px; }
+  .sign-in-panel, .staff-detail-card { padding-top: 16px; }
   .attendee-home .events-section { padding: 0 0 48px; }
   .attendee-home .section-heading { align-items: start; gap: 24px; margin-bottom: 16px; }
   .attendee-home .event-browse-controls { width: min(72%, 780px); max-width: none; }
