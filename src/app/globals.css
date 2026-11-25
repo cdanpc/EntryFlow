@@ -150,3 +150,6 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 .scan-manual-form .checkin-entry input::placeholder{color:#9babb1;letter-spacing:1px}
 .scan-manual-form .checkin-entry button{min-width:110px;padding:0 12px;font-size:12px}
 .scan-manual-form .checkin-entry input,.scan-manual-form .checkin-entry button{height:46px;min-height:46px}
+/* Frame the supplied logo's white margins without altering the source artwork. */
+.brand-mark.brand-logo{position:relative;display:inline-block;flex-shrink:0;width:36px;height:36px;overflow:hidden;background:#fff;border-radius:5px;box-shadow:none}
+.brand-mark.brand-logo img{position:absolute;top:-27%;left:-25%;width:150%;height:150%;max-width:none;object-fit:contain}
