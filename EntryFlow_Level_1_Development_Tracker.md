@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Moved staff Back inside the detail card above ATTENDEE DETAILS on desktop/mobile. Event details now uses the shared Find Ticket header and shows Back to events above the photo on compact layouts. Desktop staff name/code search expands across two thirds of the controls row. Lint, typecheck, and production build pass; browser visual verification remains pending.
+
 - 2026-11-26: Aligned desktop attendee search beside Event, removed the staff Home check-in desk and Manual entry sidebar link, and added a desktop black Back link with theme-color hover above attendee details. Scan now accepts six-character manual entry below the camera on mobile and desktop. Authenticated, rate-limited lookup respects selected-event scope and redirects to the same protected review flow without recording attendance. All 21 tests, lint, typecheck, and production build pass; browser/device visual verification remains pending.
 
 - 2026-11-26: Applied the two desktop SVG references using a 104px left navigation rail, a responsive 3/4/5-column event grid, and a simplified staff workspace. Reused adaptive navigation and extracted shared icons; added desktop Find Ticket/Sign in and staff Activity/Manual entry access, with sign-out at the rail bottom. Existing mobile layouts and backend flows are retained. UI/UX Pro Max design-system and UX searches completed. Lint, typecheck, and production build pass; browser responsive/keyboard/visual checks remain pending because browser access is unavailable.
