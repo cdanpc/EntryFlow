@@ -2,6 +2,14 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
+## Supabase connections on Vercel
+
+Use Supabase transaction pooling for serverless application traffic: port `6543` with `pgbouncer=true&connection_limit=1` in the URL query parameters. Append using `&` if the URL already has a query string. Keep credentials private in environment settings.
+
+The application runtime adapts legacy `*.pooler.supabase.com:5432` session URLs to transaction pooling and defaults each Prisma instance to one connection. Explicit connection limits and other URL options are preserved. Local, direct, and unrelated database URLs are unchanged. Prisma CLI and migrations continue using the original environment configuration; only the application client applies this adaptation. Each process reuses its Prisma client.
+
+This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverless instances exhaust the small session pool. A production deployment of the fix is required for existing Vercel functions to use it. See [Supabase's Prisma connection guidance](https://supabase.com/docs/guides/database/prisma).
+
 ## Staff attendee workspace
 
 Staff land on Attendees. Choose an event, then search by partial name or ticket code. Matching is case-insensitive and updates after a 300 ms pause. All, Awaiting, and Checked in filters combine with search. Clear resets the query; paging shows 50 results at a time. Organizer All also includes waitlisted and cancelled registrations.
