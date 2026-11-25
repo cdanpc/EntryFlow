@@ -23,7 +23,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Guest registration form with server-side name, email, and Philippine mobile validation.
 - PostgreSQL/Prisma data model, migration, and demo seed data for two events, one full event, and Organizer and Door Staff accounts.
 - Duplicate active registration prevention and a transaction that locks the event while checking capacity.
-- A six-character, database-unique manual ticket code plus a separate cryptographically random QR and ticket-URL secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code or QR secret.
+- A six-character, database-unique manual ticket code plus a separate cryptographically random ticket secret. The QR opens the ticket URL containing that secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code, QR secret, or ticket URL.
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
 - Staff camera QR scanning and editable six-character manual-code check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result. Camera scans submit the private QR token without showing it in the manual field.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
@@ -38,7 +38,7 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
-| L1-02 | Scan QR with any phone QR app; decoded content equals the ticket QR value | Not Run | User reports built-in camera scanning and manual check-in work; the separate QR-reader payload comparison is not recorded. |
+| L1-02 | Scan QR with any phone QR app; decoded content contains the ticket URL and private token | Not Run | The QR now opens a ticket URL for ordinary phone cameras. Retest the new QR and confirm staff scanning still works; the planning document's exact-code wording differs from this URL behavior. |
 | L1-03 | Refresh and retrieve ticket with six-character code and email | Not Run | Previous lookup verification used the former long code; recheck the new manual-code flow. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
@@ -112,6 +112,8 @@ npm.cmd run db:seed:staff
 Pushing code to GitHub does not run this command on Vercel. Set the two password variables in the environment that runs the seed, and run the command once against the database configured for the Vercel deployment.
 
 For a temporary same-day check-in event, run `npm.cmd run db:seed:today-demo` against the deployment database. Register a new attendee for that event before 23:59 Asia/Manila, then select the event in the Door Staff dashboard and scan its ticket QR. The event is date-specific; rerun the command on another day if needed.
+
+The ticket QR uses `APP_URL` when configured, otherwise the Vercel deployment URL or the local request host. Set `APP_URL` to the site's canonical HTTPS origin if using a custom domain. An ordinary phone camera opens the ticket page; the protected staff scanner reads its token for check-in.
 
 ## Checks
 

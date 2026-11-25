@@ -22,7 +22,17 @@ export async function checkInTicket(eventId: string, _state: CheckInState, formD
     return { kind: "error", message: "Check-in is temporarily unavailable. Try again." };
   }
 
-  const enteredCode = String(formData.get("ticketCode") || formData.get("manualCode") || "").trim();
+  const scannedValue = String(formData.get("ticketCode") || formData.get("manualCode") || "").trim();
+  let enteredCode = scannedValue;
+  if (/^https?:\/\//i.test(scannedValue)) {
+    try {
+      const parsed = new URL(scannedValue);
+      const match = /^\/tickets\/([A-Za-z0-9_-]{32,64})\/?$/.exec(parsed.pathname);
+      enteredCode = match?.[1] ?? "";
+    } catch {
+      enteredCode = "";
+    }
+  }
   const manualCode = enteredCode.toUpperCase();
   const isManualCode = /^[0-9A-HJKMNP-TV-Z]{6}$/.test(manualCode);
   const isQrCode = /^[A-Za-z0-9_-]{32,64}$/.test(enteredCode);

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import QRCode from "qrcode";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatCebuDateRange } from "@/lib/format";
@@ -19,7 +20,11 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
   });
   if (!ticket) notFound();
 
-  const qrData = await QRCode.toDataURL(ticket.ticketCode, { errorCorrectionLevel: "M", margin: 1, width: 256, color: { dark: "#102B3D", light: "#FFFFFF" } });
+  const vercelHost = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
+  const localHost = (await headers()).get("host") ?? "localhost:3000";
+  const baseUrl = process.env.APP_URL || (vercelHost ? `https://${vercelHost}` : `http://${localHost}`);
+  const ticketUrl = new URL(`/tickets/${ticket.ticketCode}`, baseUrl).toString();
+  const qrData = await QRCode.toDataURL(ticketUrl, { errorCorrectionLevel: "M", margin: 2, width: 384, color: { dark: "#102B3D", light: "#FFFFFF" } });
   const statusLabel = ticket.status === "CHECKED_IN" ? "Already checked in" : ticket.status === "CONFIRMED" ? "Confirmed" : ticket.status === "CANCELLED" ? "Cancelled" : "Waitlisted";
   return (
     <main className="ticket-page">
@@ -29,7 +34,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
         <h1>{ticket.event.title}</h1>
         <p className="ticket-datetime">{formatCebuDateRange(ticket.event.startsAt, ticket.event.endsAt)}</p>
         <div className="ticket-divider" />
-        <div className="ticket-body"><div className="ticket-attendee"><span className="eyebrow muted">ATTENDEE</span><strong>{ticket.fullName}</strong><span>{ticket.event.venue}</span></div><div className="ticket-qr"><Image src={qrData} width={192} height={192} alt={`QR ticket for ${ticket.event.title}`} unoptimized /><span>Show this QR code at the entrance</span></div></div>
+        <div className="ticket-body"><div className="ticket-attendee"><span className="eyebrow muted">ATTENDEE</span><strong>{ticket.fullName}</strong><span>{ticket.event.venue}</span></div><div className="ticket-qr"><Image src={qrData} width={224} height={224} alt={`QR ticket for ${ticket.event.title}`} unoptimized /><span>Show this QR code at the entrance</span></div></div>
         <div className="ticket-code"><span className="eyebrow muted">MANUAL TICKET CODE</span><code>{ticket.manualCode}</code></div>
         <p className="ticket-help">Show the QR code at the entrance, or give the six-character code to staff. You can also find your ticket again with this code and your registration email or mobile.</p>
         <Link className="lookup-back" href="/tickets">Find another ticket</Link>

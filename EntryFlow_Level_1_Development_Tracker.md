@@ -311,7 +311,7 @@ For each issue or change, add a short description, date, related phase, and curr
 | Test | Expected result | Result (Pass / Fail / Not Run) | Evidence / notes |
 |---|---|---|---|
 | L1-01 Register on phone viewport | Ticket page appears with QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. Test attendee was removed afterward. |
-| L1-02 Scan QR with any phone QR app | Decoded content equals the ticket QR value | Not Run | User reports the built-in camera scanner and manual check-in both work. The document's separate phone QR-reader payload comparison has not been recorded. |
+| L1-02 Scan QR with any phone QR app | Decoded content opens the ticket URL with the QR secret | Not Run | User reports staff camera and manual check-in work, including repeat-scan result. Ordinary phone camera did not offer an action for the former raw-token QR; QR now contains a URL and needs a phone retest. The planning document says the decoded content should equal the ticket code, so this URL variant needs reviewer confirmation. |
 | L1-03 Refresh and retrieve | Six-character code and email return ticket | Not Run | Prior verification used the former long code; retest the revised lookup flow. |
 | L1-04 Wrong code/contact combination | Ticket not found; no personal information | Pass | Correct test code plus mismatched contact returned only the generic “Ticket not found. Check the details and try again.” message. |
 | L1-05 Same email on same event | Second active registration rejected | Pass | Repeated the test registration; UI returned “This email already has an active registration for the event.” |
@@ -367,6 +367,7 @@ Use this log for items that affect multiple phases or need a single project-wide
 |---|---|---|---|---|---|
 | 2026-11-24 | 4–6 | Ticket identifiers | One long ticket code served as the visible code, lookup value, QR payload, and ticket URL secret. | Separate the six-character manual code from the 256-bit QR and URL secret; lookup still requires the matching email or mobile. | Reduce typing while retaining an unguessable QR secret and contact-gated retrieval. |
 | 2026-11-25 | 5 | Camera check-in form | Scanned QR token appeared in the manual field; future event selection stopped submission. | Keep the six-character field editable, submit QR token in a hidden form field, and display server feedback for every scan. | Make scan behavior clear without exposing the QR secret or weakening event-day check-in rules. |
+| 2026-11-25 | 4–5 | Ticket QR payload | The QR encoded a raw private token that the phone's standard camera did not present as an action. | Encode an HTTPS ticket URL containing the token; staff scanning extracts the token from that URL while retaining raw-token support. | Let a phone camera open the ticket and keep staff check-in compatible. Retest against the Level 1 decoded-code wording. |
 
 ## Development notes
 
