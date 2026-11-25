@@ -10,7 +10,7 @@
 @media (max-width: 760px) { .site-shell.attendee-event-details { padding: 0 16px 118px; } .attendee-event-details .detail-layout { padding-top: 4px; } }
 
 @media (min-width: 1025px) {
-  :root { --sidebar-width: 104px; }
+  :root { --sidebar-width: 78px; }
   body { background: var(--white); }
 
   .site-shell, .detail-shell, .ticket-page {
@@ -33,7 +33,7 @@
     width: var(--sidebar-width);
     max-width: none;
     height: 100dvh;
-    padding: 20px 10px;
+    padding: 20px 6px;
     border-right: 1px solid var(--line);
     background: var(--white);
     transform: none;
@@ -87,6 +87,7 @@
   }
   .mobile-nav .mobile-nav-inner > a:hover { background: #e8f0f4; color: var(--navy); }
   .mobile-nav .mobile-nav-inner > a.active { background: #e4f3f8; color: var(--blue); }
+  .mobile-nav .mobile-nav-inner > a > span { overflow-wrap: anywhere; }
   .mobile-nav .mobile-nav-inner > .desktop-nav-signin { margin-top: auto; }
   .mobile-nav svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .mobile-nav a:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
@@ -102,8 +103,7 @@
   .attendee-detail-back, .event-detail-back { min-height: 32px; }
   .sign-in-panel, .staff-detail-card { padding-top: 16px; }
   .attendee-home .events-section { padding: 0 0 48px; }
-  .attendee-home .section-heading { align-items: start; gap: 24px; margin-bottom: 16px; }
-  .attendee-home .event-browse-controls { width: min(72%, 780px); max-width: none; }
+  .attendee-home .event-browse-controls.section-heading { grid-template-columns: minmax(90px, 1fr) minmax(240px, 640px) minmax(90px, 1fr); grid-template-areas: "heading search filter"; align-items: center; gap: 24px; margin-bottom: 16px; }
   .attendee-home .section-heading .eyebrow { display: none; }
   .attendee-home .section-heading h2 { margin: 0; font-size: 28px; font-weight: 800; }
   .attendee-home .event-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 16px; }
@@ -123,8 +123,8 @@
   /* Staff uses the same rail and an uncluttered list workspace. */
   .staff-header { height: 0; padding: 0; border: 0; background: transparent; }
   .staff-header > .brand { display: none; }
-  .staff-account { position: fixed; left: 12px; bottom: 24px; z-index: 60; }
-  .staff-account summary { min-width: 80px; max-width: 80px; min-height: 44px; padding: 0 6px; font-size: 11px; }
+  .staff-account { position: fixed; left: 6px; width: calc(var(--sidebar-width) - 12px); bottom: 24px; z-index: 60; }
+  .staff-account summary { flex-direction: column; gap: 2px; width: 100%; min-width: 0; max-width: none; min-height: 52px; padding: 6px 4px; font-size: 11px; }
   .staff-account-menu { top: auto; bottom: 0; left: calc(100% + 12px); right: auto; }
   .staff-directory .staff-content { max-width: 1600px; padding: 48px 40px 64px; margin: 0 auto; }
   .staff-attendees-panel { margin: 0; padding: 0; border: 0; border-radius: 0; box-shadow: none; }
