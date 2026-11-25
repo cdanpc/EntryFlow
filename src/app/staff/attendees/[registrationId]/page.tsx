@@ -17,8 +17,8 @@ export default async function StaffAttendeePage({ params }: { params: Promise<{ 
   const time = (date: Date) => new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" }).format(date);
   return <main className="staff-shell">
     <StaffHeader role={session.user.role} eventId={record.eventId} />
-    <Link className="attendee-detail-back" href={`/staff?eventId=${encodeURIComponent(record.eventId)}`}><span aria-hidden="true">&lt;</span> Back</Link>
     <section className="staff-detail-card">
+      <Link className="attendee-detail-back" href={`/staff?eventId=${encodeURIComponent(record.eventId)}`}><span aria-hidden="true">&lt;</span> Back</Link>
       <p className="eyebrow">ATTENDEE DETAILS</p><h1>{record.fullName}</h1>
       <span className={`ticket-status status-${record.status.toLowerCase()}`}>{record.status === "CHECKED_IN" ? "Checked in" : record.status === "CONFIRMED" ? "Awaiting check-in" : record.status}</span>
       <dl className="verify-details">

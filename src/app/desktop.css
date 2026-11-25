@@ -2,7 +2,9 @@
 .mobile-nav .desktop-nav-brand,
 .mobile-nav .desktop-nav-item,
 .mobile-nav.desktop-only-nav { display: none; }
-.attendee-detail-back { display: none; }
+.attendee-detail-back, .event-detail-back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin: 0 0 12px; color: #000; font-size: 14px; transition: color 180ms ease; }
+.attendee-detail-back:hover, .event-detail-back:hover { color: var(--blue); }
+@media (max-width: 760px) { .site-shell.attendee-event-details { padding: 0 16px 118px; } .attendee-event-details .detail-layout { padding-top: 12px; } }
 
 @media (min-width: 1025px) {
   :root { --sidebar-width: 104px; }
@@ -128,15 +130,13 @@
   .staff-responsive-table tr:hover td { background: #f7fbfc; }
   .staff-responsive-table td:first-child a:hover { color: var(--blue); text-decoration: underline; }
   .staff-responsive-table code { font-size: 12px; }
-  .staff-directory-controls { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: end; gap: 24px; max-width: 1064px; margin-bottom: 16px; }
+  .staff-directory-controls { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr); align-items: end; gap: 24px; max-width: none; margin-bottom: 16px; }
   .staff-directory-controls .mobile-event-picker, .staff-directory-controls .attendee-search { max-width: none; margin: 0; }
   .attendee-search-field { min-width: 0; }
   .attendee-search-label { position: static; display: block; width: auto; height: auto; margin: 0 0 7px; overflow: visible; clip: auto; white-space: normal; font-size: 12px; font-weight: 700; }
   .staff-activity .staff-directory-controls { grid-template-columns: minmax(0, 520px); }
   .staff-scan-page .mobile-scanner { margin-top: 6vh; }
-  .attendee-detail-back { display: flex; align-items: center; gap: 6px; max-width: 700px; width: calc(100% - 64px); min-height: 44px; margin: 24px auto 0; color: #000; font-size: 14px; transition: color 180ms ease; }
-  .attendee-detail-back:hover { color: var(--blue); }
-  .attendee-detail-back + .staff-detail-card { margin-top: 8px; }
+  .attendee-event-details .event-detail-back { display: none; }
   .staff-detail-card { margin-top: 48px; }
   .staff-verify-panel { margin-top: 0; }
   .detail-layout { max-width: 1200px; margin: 0 auto; padding-top: 0; }

@@ -7,6 +7,7 @@ import { formatCebuDateRange } from "@/lib/format";
 import { prisma } from "@/lib/prisma";
 import { eventPhoto } from "@/lib/event-photo";
 import { MobileNav } from "@/components/mobile-nav";
+import { AttendeeHeader } from "@/components/attendee-header";
 
 export const dynamic = "force-dynamic";
 
@@ -23,10 +24,11 @@ export default async function EventDetailsPage({ params }: { params: Promise<{ e
 
   const spotsLeft = Math.max(0, event.capacity - event._count.registrations);
   return (
-    <main className="detail-shell">
-      <header className="detail-topbar"><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>EntryFlow</Link></header>
+    <main className="site-shell attendee-event-details">
+      <AttendeeHeader current="home" />
       <div className="detail-layout">
         <section className="detail-main">
+          <Link className="event-detail-back" href="/"><span aria-hidden="true">&lt;</span> Back to events</Link>
           <div className="detail-art"><Image src={eventPhoto(event.id)} alt="Event gathering" fill sizes="(max-width: 760px) 100vw, 680px" /></div>
           <p className="eyebrow detail-eyebrow">EVENT DETAILS</p>
           <h1 className="detail-title">{event.title}</h1>
