@@ -6,6 +6,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { formatCebuDateRange } from "@/lib/format";
+import { auth } from "@/auth";
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 export const dynamic = "force-dynamic";
@@ -26,6 +27,9 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
   const ticketUrl = new URL(`/tickets/${ticket.ticketCode}`, baseUrl).toString();
   const qrData = await QRCode.toDataURL(ticketUrl, { errorCorrectionLevel: "M", margin: 2, width: 384, color: { dark: "#102B3D", light: "#FFFFFF" } });
   const statusLabel = ticket.status === "CHECKED_IN" ? "Already checked in" : ticket.status === "CONFIRMED" ? "Confirmed" : ticket.status === "CANCELLED" ? "Cancelled" : "Waitlisted";
+  const staffSession = await auth();
+  const verifyPath = `/staff/verify/${ticketCode}`;
+  const staffHref = staffSession?.user?.staffId ? verifyPath : `/staff/sign-in?next=${encodeURIComponent(verifyPath)}`;
   return (
     <main className="ticket-page">
       <header className="detail-topbar ticket-topbar"><Link href="/" className="back-link">← <span>Browse events</span></Link><Link className="brand" href="/"><span className="brand-mark" aria-hidden="true">E</span>entryflow</Link><span className="topbar-spacer" /></header>
@@ -38,6 +42,7 @@ export default async function TicketPage({ params }: { params: Promise<{ ticketC
         <div className="ticket-code"><span className="eyebrow muted">MANUAL TICKET CODE</span><code>{ticket.manualCode}</code></div>
         <p className="ticket-help">Show the QR code at the entrance, or give the six-character code to staff. You can also find your ticket again with this code and your registration email or mobile.</p>
         <Link className="lookup-back" href="/tickets">Find another ticket</Link>
+        <div className="ticket-staff-link"><Link href={staffHref}>{staffSession?.user?.staffId ? "Staff: Verify / Check In" : "Staff: Sign in to verify"}</Link></div>
       </article>
     </main>
   );

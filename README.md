@@ -25,7 +25,7 @@ The following features have source code, but are **not acceptance-tested** yet:
 - Duplicate active registration prevention and a transaction that locks the event while checking capacity.
 - A six-character, database-unique manual ticket code plus a separate cryptographically random ticket secret. The QR opens the ticket URL containing that secret. Ticket lookup requires the manual code and matching email or mobile; staff check-in accepts the short code, QR secret, or ticket URL.
 - Auth.js Credentials staff sign-in using bcrypt password hashes and an eight-hour encrypted session.
-- Staff camera QR scanning and editable six-character manual-code check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result. Camera scans submit the private QR token without showing it in the manual field.
+- Staff camera QR scanning and editable six-character manual-code check-in for a selected event on its date in Asia/Manila, with atomic first check-in and repeat-scan result. Camera scans submit the private QR token without showing it in the manual field. Staff using a normal phone camera can open the ticket link, sign in if needed, review its details, and explicitly check it in.
 - Organizer attendee list with search and pagination; Door Staff does not receive attendee contact details.
 - PostgreSQL-backed, cross-instance rate limits for ticket lookup, staff sign-in, and check-in. Rate-limit subjects are HMAC-hashed before storage.
 - Basic security response headers and no-store caching for staff and ticket pages.

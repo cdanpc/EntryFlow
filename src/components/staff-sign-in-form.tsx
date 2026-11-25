@@ -3,12 +3,13 @@
 import { useActionState, useState } from "react";
 import { signInStaff } from "@/app/staff/sign-in/actions";
 
-export function StaffSignInForm() {
+export function StaffSignInForm({ next }: { next: string }) {
   const [state, action, pending] = useActionState(signInStaff, { message: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <form action={action} className="registration-form">
+      <input type="hidden" name="next" value={next} />
       {state.message && <p className="form-alert" role="alert">{state.message}</p>}
       <div className="field">
         <label htmlFor="username">Username</label>

@@ -41,7 +41,7 @@ export async function checkInTicket(eventId: string, _state: CheckInState, formD
   try {
     const ticket = await prisma.registration.findFirst({
       where: { eventId, OR: [{ manualCode }, { ticketCode: enteredCode }] },
-      select: { id: true, fullName: true, status: true, checkedInAt: true, event: { select: { startsAt: true } } },
+      select: { id: true, ticketCode: true, fullName: true, status: true, checkedInAt: true, event: { select: { startsAt: true } } },
     });
     if (!ticket) return { kind: "invalid", message: "Invalid ticket. Check the code and selected event." };
     if (ticket.status === RegistrationStatus.CHECKED_IN && ticket.checkedInAt) {
@@ -62,6 +62,7 @@ export async function checkInTicket(eventId: string, _state: CheckInState, formD
     });
     if (changed.count === 1) {
       revalidatePath("/staff");
+      revalidatePath(`/staff/verify/${ticket.ticketCode}`);
       return { kind: "success", message: "Checked in", attendee: ticket.fullName, time: new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" }).format(checkedInAt) };
     }
 

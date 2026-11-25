@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import type { IScannerControls } from "@zxing/browser";
 import { checkInTicket, type CheckInState } from "@/app/staff/actions";
+import { CheckInResult } from "@/components/check-in-result";
 
 export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: boolean }) {
   const action = checkInTicket.bind(null, eventId);
@@ -73,7 +74,7 @@ export function CheckInForm({ eventId, enabled }: { eventId: string; enabled: bo
       {cameraError && <p className="field-error" role="alert">{cameraError}</p>}
       {(pending || scanStatus) && <p className="field-hint" role="status" aria-live="polite">{pending ? "Checking ticket…" : scanStatus}</p>}
       {!enabled && <p className="field-hint">Check-in is available on the event date in Cebu.</p>}
-      {state.kind !== "idle" && <div className={`checkin-result result-${state.kind}`} role="status" aria-live="polite"><strong>{state.message}</strong>{state.attendee && <span>{state.attendee}</span>}{state.time && <span>{state.time}</span>}</div>}
+      <CheckInResult state={state} />
     </form>
   );
 }
