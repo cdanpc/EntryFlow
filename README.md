@@ -2,9 +2,9 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
-> **Assessment status:** Level 1 implementation in progress. Ten of eleven checks had passed before the short-code revision; one lookup check is now marked Not Run until retested with the new six-character code, and the phone QR scan remains untested. No public deployment is available yet.
+> **Assessment status:** Level 1 implementation is in progress. The tracker records 9 of 11 acceptance checks as passed. The phone QR-reader payload comparison and six-character ticket lookup still need to be recorded.
 
-> **Latest change:** The short-code changes and Vercel build fix pass local typechecking and production build. Short-code acceptance checks are still pending, and Vercel must rebuild the latest fix before deployment can be confirmed.
+> **Latest change:** The user reports that built-in camera scanning and manual check-in work. The Level 1 document checks still require separate evidence for QR payload decoding and refreshed ticket retrieval.
 
 ## Assessment details
 
@@ -38,7 +38,7 @@ Mark a check as passed only after executing it and recording evidence. Implement
 | ID | Acceptance check | Result | Evidence / notes |
 |---|---|---|---|
 | L1-01 | Register at phone viewport; ticket page displays QR | Pass | At a 360px emulated phone viewport, registration completed and the confirmed ticket QR fit without horizontal page overflow. |
-| L1-02 | Scan QR with the Door Staff phone camera; decoded secret is accepted for check-in | Not Run | Same-day demo event created; real-phone scan and check-in result still need verification. |
+| L1-02 | Scan QR with any phone QR app; decoded content equals the ticket QR value | Not Run | User reports built-in camera scanning and manual check-in work; the separate QR-reader payload comparison is not recorded. |
 | L1-03 | Refresh and retrieve ticket with six-character code and email | Not Run | Previous lookup verification used the former long code; recheck the new manual-code flow. |
 | L1-04 | Wrong code/contact combination returns not found without personal information | Pass | Correct test ticket code with a mismatched contact returned only “Ticket not found. Check the details and try again.” |
 | L1-05 | Same email cannot register twice for one event | Pass | Repeating the same test registration was rejected with “This email already has an active registration for the event.” |
@@ -145,7 +145,7 @@ Verified in the current workspace:
 - PostgreSQL rate-limit smoke check — two requests were allowed and the third was denied for a temporary test subject; its bucket was removed.
 - Local production staff acceptance checks — Organizer sign-in succeeded; valid check-in, repeated scan, made-up code rejection, attendee list, and totals matched the temporary fixture. The attendee and same-day event were removed, the browser was signed out, and the demo credential was not saved in the browser.
 
-Database connection and initial setup are verified. The only remaining Level 1 acceptance check is decoding the QR with a phone. Registration/check-in concurrency and Organizer-versus-Door-Staff data visibility still need direct verification. Tablet layouts and real-device keyboard/camera behavior also need broader QA.
+Database connection and initial setup are verified. The remaining Level 1 acceptance checks are the phone QR-reader payload comparison and refreshed lookup with the six-character code. Registration/check-in concurrency and Organizer-versus-Door-Staff data visibility still need direct verification. Tablet layouts and real-device keyboard/camera behavior also need broader QA.
 
 ## Data model
 
@@ -159,7 +159,7 @@ The database migration enforces valid event schedules and positive capacity. A p
 
 - Run the remaining Level 1 acceptance checks and record actual evidence.
 - Configure the deployment proxy to overwrite and provide a trusted `x-real-ip` header (or trusted `x-forwarded-for`) so address-based rate limits use the actual client address; verify the chosen host's behavior before public launch.
-- Confirm camera behavior is out of Level 1 scope; camera scanning, waitlists, event management, cancellation, CSV, email, and Level 3 features are not implemented.
+- Built-in camera scanning is implemented but is a Level 3 feature in the project plan. Waitlists, event management, cancellation, CSV, email, and the remaining Level 3 features are not implemented.
 - The QR ticket URL contains the unguessable ticket code and must be treated as sensitive.
 - The six-character manual code is not the QR bearer secret. Public ticket retrieval also requires the registered email or mobile; staff check-in requires an authenticated staff session and selected event.
 - Current limits: ticket lookup 60 per address per 15 minutes; staff sign-in 30 per address and 10 per username per 15 minutes; check-in 120 per staff member per minute.
