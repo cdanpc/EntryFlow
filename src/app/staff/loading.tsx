@@ -1,1 +1,2 @@
-export default function StaffLoading() { return <div className="staff-content" role="status" aria-live="polite">Loading staff workspace…</div>; }
+import { LoadingDots } from "@/components/loading-dots";
+export default function StaffLoading() { return <LoadingDots label="Loading staff workspace" />; }

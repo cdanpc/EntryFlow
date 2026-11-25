@@ -35,6 +35,6 @@ export function MobileNav({ role, current, revealOnScroll = false, eventId }: { 
   return <nav className={`mobile-nav ${role === "staff" ? "staff-dock" : ""} ${visible ? "" : "mobile-nav-hidden"}`} aria-label={`${role === "staff" ? "Staff" : "Attendee"} mobile navigation`} inert={!visible}><div className="mobile-nav-inner">{items.map((item) => {
     const active = current === item.icon || (item.icon === "ticket" && current === "search");
     const href = role === "staff" && selectedEvent ? `${item.href}?eventId=${encodeURIComponent(selectedEvent)}` : item.href;
-    return <Link key={item.href} href={href} className={`${active ? "active" : ""} ${role === "staff" && item.icon === "scan" ? "primary-scan" : ""}`} aria-current={active ? "page" : undefined}><NavIcon name={item.icon} /><span>{item.label}</span></Link>;
+    return <Link key={item.href} href={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined}><NavIcon name={item.icon} /><span>{item.label}</span></Link>;
   })}</div></nav>;
 }
