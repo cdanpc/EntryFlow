@@ -155,9 +155,12 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
 .brand-mark.brand-logo img{position:absolute;top:-27%;left:-25%;width:150%;height:150%;max-width:none;object-fit:contain}
 .event-browse-controls{display:grid;gap:10px;width:360px;max-width:65%;min-width:0}
 .event-browse-controls .event-search{width:100%;max-width:none}
-.event-browse-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.event-browse-filters>div{display:grid;gap:5px;min-width:0}
-.event-browse-filters label{font-size:12px;font-weight:650;color:var(--navy)}
-.event-browse-filters select{width:100%;min-width:0;min-height:44px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--white);color:var(--navy);font:inherit;font-size:14px;cursor:pointer}
-.event-browse-filters select:focus-visible{outline:3px solid var(--cyan);outline-offset:2px}
-@media(max-width:760px){.attendee-home .section-heading{display:grid;grid-template-columns:1fr;gap:12px}.event-browse-controls{width:100%;max-width:none}.event-browse-controls .event-search input,.event-browse-filters select{font-size:16px}}
+@media(max-width:760px){.attendee-home .section-heading{display:grid;grid-template-columns:1fr;gap:12px}.event-browse-controls{width:100%;max-width:none}.event-browse-controls .event-search input{font-size:16px}}
+/* Shared white surfaces and restrained EntryFlow-blue elevation. */
+:root{--background:#fff;--shadow-card:0 2px 8px rgb(8 124 180 / .045);--shadow-panel:0 3px 12px rgb(8 124 180 / .055);--shadow-field:0 1px 5px rgb(8 124 180 / .055);--radius-action:7px}
+body,.site-shell,.detail-shell,.ticket-page,.staff-shell{background:var(--white)}
+.event-card,.lookup-panel,.registration-panel,.ticket-card,.staff-detail-card,.staff-search-page,.staff-panel,.attendee-panel{box-shadow:var(--shadow-card)}
+.event-card:hover{box-shadow:var(--shadow-panel)}
+.field input,.checkin-entry input,.event-picker select,.staff-search-fields input,.staff-search-fields select,.mobile-event-picker select,.attendee-search,.event-search{box-shadow:var(--shadow-field)}
+.field input:focus{box-shadow:var(--focus-ring),var(--shadow-field)}
+.attendee-header.topbar .staff-link,.attendee-home .staff-link,.mobile-nav .mobile-nav-inner>.desktop-nav-signin,.submit-button{border-radius:var(--radius-action)}

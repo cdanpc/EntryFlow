@@ -13,7 +13,7 @@ export default async function StaffSignInPage({ searchParams }: { searchParams: 
   return (
     <main className="detail-shell">
       <header className="detail-topbar sign-in-topbar"><Link className="brand" href="/"><BrandLogo />EntryFlow</Link></header>
-      <section className="lookup-panel sign-in-panel"><h1>Sign in</h1><p className="lookup-intro">Access event check-in and attendee records.</p><StaffSignInForm next={next} /></section>
+      <section className="lookup-panel sign-in-panel"><Link className="attendee-detail-back" href="/"><span aria-hidden="true">&lt;</span> Back to home</Link><h1>Sign in</h1><p className="lookup-intro">Access event check-in and attendee records.</p><StaffSignInForm next={next} /></section>
       <MobileNav role="attendee" current="signin" desktopOnly />
     </main>
   );

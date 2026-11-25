@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Unified sidebar/main backgrounds to white, applied very faint EntryFlow-blue shadows to fields/cards using shared tokens, preserved focus feedback, and matched Sign in action corners at 7px. Added Back to home inside the sign-in card above its title on desktop/mobile. Removed public event date/sort dropdowns and their unused helpers/tests at user request; search and soonest-first ordering remain, and legacy filter parameters are ignored. All 21 remaining tests, lint, typecheck, and production build pass. Browser visual verification remains pending.
+
 - 2026-11-26: Extended desktop event search toward the left and reduced the empty top header strip to 20px. Added date and sort dropdowns below search, preserving query/filter URL state. Cebu-based date windows and deterministic date/name/available-spots sorting use current confirmed/check-in counts; capacity enforcement is unchanged. All 29 tests, lint, typecheck, and production build pass; browser/device visual checks remain pending because browser access is unavailable.
 
 - 2026-11-26: Replaced all generated E marks with the supplied PNG via shared BrandLogo, including headers, sidebar, sign-in, tickets, and footer. Removed the desktop rule hiding Back to events; its existing placement above the event photo now applies at every viewport size. Lint, typecheck, and production build pass. Browser/device visual verification remains pending because browser access is unavailable.

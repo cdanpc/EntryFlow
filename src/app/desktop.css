@@ -32,7 +32,7 @@
     height: 100dvh;
     padding: 20px 10px;
     border-right: 1px solid var(--line);
-    background: #f5f8fa;
+    background: var(--white);
     transform: none;
     filter: none;
     opacity: 1;
@@ -101,7 +101,8 @@
   .attendee-home .section-heading .eyebrow { display: none; }
   .attendee-home .section-heading h2 { margin: 0; font-size: 28px; font-weight: 800; }
   .attendee-home .event-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 16px; }
-  .attendee-home .event-card { display: flex; flex-direction: column; border-radius: 15px; box-shadow: none; }
+  .attendee-home .event-card { display: flex; flex-direction: column; border-radius: 15px; box-shadow: var(--shadow-card); }
+  .attendee-home .event-card:hover { box-shadow: var(--shadow-panel); }
   .attendee-home .event-art { height: auto; aspect-ratio: 1 / 1; }
   .attendee-home .event-content { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 18px; }
   .attendee-home .event-date { margin: 0; font-size: 12px; }
