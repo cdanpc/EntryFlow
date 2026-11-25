@@ -14,7 +14,7 @@ This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverles
 
 ### Desktop layout
 
-Above 1024px, the mobile navigation becomes a fixed left sidebar based on the supplied desktop SVGs. Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, Activity, and a Manual entry link to the existing check-in form. The staff role/sign-out menu sits at the bottom of the rail. Event selection is carried in staff navigation links.
+Above 1024px, the mobile navigation becomes a fixed left sidebar based on the supplied desktop SVGs. Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector. The desktop attendee details page has a Back link to the same event's list.
 
 The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
 
@@ -23,6 +23,8 @@ References: `SVGs/attendee - home.svg` and `SVGs/Staff - Home.svg`. Browser visu
 Staff land on Attendees. Choose an event, then search by partial name or ticket code. Matching is case-insensitive and updates after a 300 ms pause. All, Awaiting, and Checked in filters combine with search. Clear resets the query; paging shows 50 results at a time. Organizer All also includes waitlisted and cancelled registrations.
 
 The dock links to Attendees, Scan, and Activity; only the current page is highlighted. Selected events travel in navigation URLs, with a tab-local fallback. Activity shows the event's latest check-ins, rather than a personal staff audit log. The former `/staff/search` URL redirects to Attendees.
+
+Scan supports camera scanning and six-character manual ticket entry on both mobile and desktop. Both methods open protected ticket review before staff explicitly check in the attendee. Manual lookup is authenticated and rate limited; when an event is selected, the code must belong to that event. Without event context, the unique manual code resolves a ticket for review. Lookup does not change attendance. The former check-in desk on Attendees and separate Manual entry sidebar link have been removed.
 
 On mobile and tablet, directory rows show a page-aware number, attendee name, and status. Tapping a row opens the protected attendee details. Summary counters, contact details, codes, and timestamps are omitted from these compact lists; full details remain on the detail screen, with contacts restricted to Organizers. Desktop keeps its table and summary. Page navigation and directory requests use a centered three-dot circular loader, with a static indicator when reduced motion is requested.
 

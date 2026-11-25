@@ -1,7 +1,7 @@
 "use client";
 
 export function AttendeeSearch({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  return <div className="attendee-search"><label className="sr-only" htmlFor="attendee-search">Search attendee name or ticket code</label><input id="attendee-search" type="search" value={value} onChange={(event) => onChange(event.target.value)} placeholder="Name or ticket code" maxLength={100} autoComplete="off" />{value && <button type="button" onClick={() => onChange("")} aria-label="Clear attendee search">Clear</button>}</div>;
+  return <div className="attendee-search-field"><label className="attendee-search-label sr-only" htmlFor="attendee-search">Name or ticket code</label><div className="attendee-search"><input id="attendee-search" type="search" value={value} onChange={(event) => onChange(event.target.value)} placeholder="Name or ticket code" maxLength={100} autoComplete="off" />{value && <button type="button" onClick={() => onChange("")} aria-label="Clear attendee search">Clear</button>}</div></div>;
 }
 
 export function AttendeeFilters({ value, onChange }: { value: string; onChange: (value: string) => void }) {
