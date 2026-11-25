@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import type { StaffAttendeeData } from "@/lib/staff-attendees";
 import { AttendeeSearch, AttendeeFilters } from "@/components/attendee-search";
 import { MobileNav } from "@/components/mobile-nav";
-import { CheckInForm } from "@/components/check-in-form";
-import { manilaDateKey } from "@/lib/manila-time";
 import { LoadingDots } from "@/components/loading-dots";
 import { StaffAttendeeList } from "@/components/staff-attendee-list";
 
@@ -44,9 +42,9 @@ export function StaffAttendees({ events, eventId, initial, initialQuery = "", in
   const update = (setter: (value: string) => void, value: string) => { setter(value); setPage(1); };
   const time = (value: string) => new Intl.DateTimeFormat("en-PH", { timeZone: "Asia/Manila", dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
   return <><section className={`staff-attendees-panel ${activity ? "staff-activity" : ""}`}><h1>{activity ? "Activity" : "Attendees"}</h1>{events.length ? <>
-    <div className="mobile-event-picker"><label htmlFor="attendee-event">Event</label><select id="attendee-event" value={selected} onChange={(event) => update(setSelected, event.target.value)}>{events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}</select></div>
+    <div className="staff-directory-controls"><div className="mobile-event-picker"><label htmlFor="attendee-event">Event</label><select id="attendee-event" value={selected} onChange={(event) => update(setSelected, event.target.value)}>{events.map((event) => <option key={event.id} value={event.id}>{event.title}</option>)}</select></div>{!activity && <AttendeeSearch value={query} onChange={(value) => update(setQuery, value)} />}</div>
     <div className="mobile-counts staff-summary"><span>{data?.registered ?? 0} registered</span><span>{data?.checkedIn ?? 0} checked in</span><span>{(data?.registered ?? 0) - (data?.checkedIn ?? 0)} awaiting</span>{organizer && <span>{data?.waitlisted ?? 0} waitlisted</span>}</div>
-    {!activity && <><AttendeeSearch value={query} onChange={(value) => update(setQuery, value)} /><AttendeeFilters value={status} onChange={(value) => update(setStatus, value)} /></>}
+    {!activity && <AttendeeFilters value={status} onChange={(value) => update(setStatus, value)} />}
     {loading && <LoadingDots label={activity ? "Loading activity" : "Loading attendees"} />}
     <div className="attendee-feedback sr-only" role="status" aria-live="polite">{!loading && !error ? `${data?.total ?? 0} ${activity ? "check-ins" : "attendees"}` : ""}</div>
     {error && <div className="form-alert" role="alert">{error} <button type="button" onClick={() => setRetry((value) => value + 1)}>Retry</button> <Link href="/staff/sign-in">Sign in</Link></div>}
@@ -54,5 +52,5 @@ export function StaffAttendees({ events, eventId, initial, initialQuery = "", in
       <td data-label="Attendee"><Link href={`/staff/attendees/${row.id}?eventId=${encodeURIComponent(selected)}`}>{row.fullName}</Link></td>{organizer && <td data-label="Contact"><span>{row.email}</span><span>{row.mobile}</span></td>}<td data-label="Ticket code"><code>{row.manualCode}</code></td><td data-label={activity ? "Checked in" : "Registered"}>{time(activity && row.checkedInAt ? row.checkedInAt : row.registeredAt)}</td><td data-label="Status"><span className={row.status === "CHECKED_IN" ? "row-checked" : "row-awaiting"}>{row.status === "CHECKED_IN" ? "✓ Checked in" : row.status === "CONFIRMED" ? "○ Awaiting" : row.status === "WAITLISTED" ? "Waitlisted" : "Cancelled"}</span></td>
     </tr>)}</tbody></table></div>{!error && data?.rows.length === 0 && <p className="staff-empty">{activity ? "No check-ins yet for this event." : query ? "No attendees match this search and status. Try another name or code, or clear the search." : "No attendees in this view. Try another status or event."}</p>}</div>
     {data && data.pages > 1 && <div className="pagination"><span>Page {data.page} of {data.pages}</span><div><button disabled={loading || data.page <= 1} onClick={() => setPage(data.page - 1)}>Previous</button><button disabled={loading || data.page >= data.pages} onClick={() => setPage(data.page + 1)}>Next</button></div></div>}
-  </> : <p className="staff-empty">No events are available.</p>}</section>{!activity && selected && <section className="desktop-checkin" id="checkin-desk" tabIndex={-1}><h2>Check-in desk</h2><CheckInForm key={selected} eventId={selected} enabled={manilaDateKey(new Date(events.find((event) => event.id === selected)!.startsAt)) === manilaDateKey(new Date())} /></section>}<MobileNav role="staff" current={activity ? "activity" : "home"} eventId={selected} /></>;
+  </> : <p className="staff-empty">No events are available.</p>}</section><MobileNav role="staff" current={activity ? "activity" : "home"} eventId={selected} /></>;
 }

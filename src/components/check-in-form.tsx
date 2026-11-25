@@ -5,10 +5,12 @@ import type { IScannerControls } from "@zxing/browser";
 import { useRouter } from "next/navigation";
 import { checkInTicket, type CheckInState } from "@/app/staff/actions";
 import { CheckInResult } from "@/components/check-in-result";
+import { findStaffTicket } from "@/app/staff/scan/actions";
+import { LoadingDots } from "@/components/loading-dots";
 
 export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId: string; enabled: boolean; scannerOnly?: boolean }) {
   const router = useRouter();
-  const action = checkInTicket.bind(null, eventId);
+  const action = (scannerOnly ? findStaffTicket : checkInTicket).bind(null, eventId);
   const [state, formAction, pending] = useActionState(action, { kind: "idle", message: "" } satisfies CheckInState);
   const [scanning, setScanning] = useState(scannerOnly);
   const [cameraError, setCameraError] = useState("");
@@ -67,7 +69,7 @@ export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId
           setCameraError(error instanceof Error && error.message === "Camera scanning requires HTTPS and camera access."
             ? error.message
             : scannerOnly
-              ? "Camera unavailable. Allow camera access and try again."
+              ? "Camera unavailable. Allow camera access or enter the ticket code below."
               : "Camera unavailable. Allow camera access or enter the ticket code manually.");
           setScanning(false);
         }
@@ -82,7 +84,13 @@ export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId
     };
   }, [scanning, enabled, eventId, scannerOnly, router]);
 
-  if (scannerOnly) return <section className="mobile-scanner" aria-label="QR scanner"><div className="scanner-frame">{scanning && <video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" />}{!scanning && <div className="scanner-idle">Camera paused</div>}<span className="scanner-corners" aria-hidden="true" /></div><p>Place the attendee&apos;s QR code inside the frame.</p><button className="camera-button" type="button" onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Start camera"}</button>{cameraError && <p className="field-error" role="alert">{cameraError}</p>}{scanStatus && <p role="status">{scanStatus}</p>}</section>;
+  if (scannerOnly) return <section className="mobile-scanner" aria-label="Scan or enter a ticket"><div className="scanner-frame">{scanning && <video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" />}{!scanning && <div className="scanner-idle">Camera paused</div>}<span className="scanner-corners" aria-hidden="true" /></div><p>Place the attendee&apos;s QR code inside the frame.</p><button className="camera-button" type="button" disabled={pending} onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Start camera"}</button>{cameraError && <p className="field-error" role="alert">{cameraError}</p>}{scanStatus && <p role="status">{scanStatus}</p>}
+    <form action={formAction} className="checkin-form scan-manual-form" aria-busy={pending} onSubmit={() => { controlsRef.current?.stop(); setScanning(false); setScanStatus(""); }}>
+      <label htmlFor="scan-manual-code">Or enter ticket code</label>
+      <div className="checkin-entry"><input id="scan-manual-code" name="manualCode" placeholder="A7K2P9" required minLength={6} maxLength={6} pattern="[A-Za-z0-9]{6}" autoComplete="off" autoCapitalize="characters" spellCheck={false} disabled={pending} /><button type="submit" disabled={pending}>{pending ? "Opening…" : "Verify ticket"}</button></div>
+      <CheckInResult state={state} />
+    </form>{pending && <LoadingDots label="Opening ticket for verification" />}
+  </section>;
 
   return (
     <form ref={formRef} action={formAction} className="checkin-form" aria-busy={pending}>

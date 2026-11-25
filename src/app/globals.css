@@ -99,7 +99,7 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
   .sign-in-panel h1{font-size:34px}
 }
 .staff-directory .staff-content{padding-bottom:130px}
-.staff-attendees-panel,.desktop-checkin{padding:24px;border:1px solid var(--line);border-radius:13px;background:#fff;margin-bottom:24px}
+.staff-attendees-panel{padding:24px;border:1px solid var(--line);border-radius:13px;background:#fff;margin-bottom:24px}
 .staff-attendees-panel h1{margin:0 0 20px;font-size:28px;letter-spacing:-.8px;font-weight:800}
 .staff-attendees-panel .mobile-event-picker{display:grid;grid-template-columns:1fr;gap:7px;max-width:600px;margin:0 0 16px}
 .mobile-counts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
@@ -136,7 +136,6 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
   .attendee-row-name{min-width:0;overflow-wrap:anywhere;color:var(--navy);font-weight:400;line-height:1.45}
   .staff-mobile-list .row-checked,.staff-mobile-list .row-awaiting{font-size:12px;white-space:nowrap}
   .staff-attendees-panel{padding:20px 16px}
-  .desktop-checkin{display:none}
   .staff-directory .staff-content{padding:20px 16px 118px}
   .staff-directory .staff-attendees-panel{padding:0;margin:0;border:0;background:transparent}
   .staff-attendees-panel h1{font-size:25px;margin-bottom:16px}
@@ -144,3 +143,10 @@ h1{max-width:760px;margin:22px 0 16px;color:var(--navy);font-size:clamp(42px,6vw
   .staff-activity .mobile-event-picker{margin-bottom:4px}
   .staff-directory .staff-empty{margin-top:12px;padding:14px;font-size:13px}
 }
+.scan-manual-form{margin:24px auto 0;padding-top:20px;border-top:1px solid var(--line);text-align:left}
+.scan-manual-form>label{font-size:13px}
+.scan-manual-form .checkin-entry{gap:8px}
+.scan-manual-form .checkin-entry input{width:0;min-width:0;font-size:16px;text-transform:uppercase}
+.scan-manual-form .checkin-entry input::placeholder{color:#9babb1;letter-spacing:1px}
+.scan-manual-form .checkin-entry button{min-width:110px;padding:0 12px;font-size:12px}
+.scan-manual-form .checkin-entry input,.scan-manual-form .checkin-entry button{height:46px;min-height:46px}

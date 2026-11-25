@@ -10,5 +10,5 @@ export default async function StaffScanPage({ searchParams }: { searchParams: Pr
   const { eventId } = await searchParams;
   const session = await auth();
   if (!session?.user?.staffId) redirect("/staff/sign-in");
-  return <main className="staff-shell staff-scan-page"><StaffHeader role={session.user.role} eventId={eventId} /><CheckInForm eventId="" enabled scannerOnly /><MobileNav role="staff" current="scan" eventId={eventId} /></main>;
+  return <main className="staff-shell staff-scan-page"><StaffHeader role={session.user.role} eventId={eventId} /><CheckInForm eventId={eventId ?? ""} enabled scannerOnly /><MobileNav role="staff" current="scan" eventId={eventId} /></main>;
 }
