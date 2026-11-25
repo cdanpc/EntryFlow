@@ -49,7 +49,8 @@ export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId
             }
             if (/^[A-Za-z0-9_-]{32,64}$/.test(token ?? "")) {
               setScanStatus("Opening ticket…");
-              router.push(`/staff/verify/${token}`);
+              const selectedEvent = new URLSearchParams(window.location.search).get("eventId");
+              router.push(`/staff/verify/${token}${selectedEvent ? `?eventId=${encodeURIComponent(selectedEvent)}` : ""}`);
             } else setCameraError("This is not an EntryFlow ticket QR. Try another code.");
             return;
           }

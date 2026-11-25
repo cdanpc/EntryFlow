@@ -2,6 +2,14 @@
 
 Event Registration and QR Check-in Management System for the CubeTech intern activity.
 
+## Staff attendee workspace
+
+Staff land on Attendees. Choose an event, then search by partial name or ticket code. Matching is case-insensitive and updates after a 300 ms pause. All, Awaiting, and Checked in filters combine with search. Clear resets the query; paging shows 50 results at a time. Organizer All also includes waitlisted and cancelled registrations.
+
+The dock links to Attendees, Scan, and Activity, with Scan emphasized. Selected events travel in navigation URLs, with a tab-local fallback. Activity shows the event's latest check-ins, rather than a personal staff audit log. The former `/staff/search` URL redirects to Attendees.
+
+The search endpoint authenticates staff, scopes queries to a published/closed event, and returns `private, no-store` responses. Door Staff receive names, manual codes, statuses, and operational timestamps; only Organizers receive contacts. QR secrets are excluded. Loading, no-match, session-expiry, and retry states are included. No schema migration is required. Device/camera and responsive visual review remain pending.
+
 > **Assessment status:** Level 1 implementation is in progress. The tracker records 9 of 11 acceptance checks as passed. The phone QR-reader payload comparison and six-character ticket lookup still need to be recorded.
 
 > **Latest change:** The user reports that built-in camera scanning and manual check-in work. The Level 1 document checks still require separate evidence for QR payload decoding and refreshed ticket retrieval.
