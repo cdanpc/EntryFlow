@@ -1,2 +1,2 @@
-import { LoadingDots } from "@/components/loading-dots";
-export default function Loading() { return <LoadingDots label="Loading page" />; }
+import { PageLoading } from "@/components/loading-indicator";
+export default function Loading() { return <PageLoading />; }

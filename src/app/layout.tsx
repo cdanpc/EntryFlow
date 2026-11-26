@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./desktop.css";
+import "./loading.css";
 
 export const metadata: Metadata = {
   title: "EntryFlow — Find your next event",

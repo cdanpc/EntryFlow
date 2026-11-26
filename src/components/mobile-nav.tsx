@@ -26,7 +26,7 @@ export function MobileNav({ role, current, revealOnScroll = false, eventId, desk
     return () => { window.removeEventListener("scroll", update); compact.removeEventListener("change", update); };
   }, [revealOnScroll]);
   const items: Item[] = role === "attendee"
-    ? [{ href: "/", label: "Home", icon: "home" }, { href: "/tickets", label: "Find Ticket", icon: "ticket" }, { href: "/staff/sign-in", label: "Sign in", icon: "signin", desktopOnly: true }]
+    ? [{ href: "/", label: "Event", icon: "home" }, { href: "/tickets", label: "Find Ticket", icon: "ticket" }, { href: "/staff/sign-in", label: "Sign in", icon: "signin", desktopOnly: true }]
     : [{ href: "/staff", label: "Attendees", icon: "home" }, { href: "/staff/scan", label: "Scan", icon: "scan" }, { href: "/staff/activity", label: "Activity", icon: "activity" }];
   const staffHome = selectedEvent ? `/staff?eventId=${encodeURIComponent(selectedEvent)}` : "/staff";
   return <nav className={`mobile-nav ${role === "staff" ? "staff-dock" : ""} ${desktopOnly ? "desktop-only-nav" : ""} ${visible ? "" : "mobile-nav-hidden"}`} aria-label={`${role === "staff" ? "Staff" : "Attendee"} navigation`} inert={!visible}><Link className="desktop-nav-brand" href={role === "staff" ? staffHome : "/"} aria-label="EntryFlow home"><BrandLogo /><span>EntryFlow</span></Link><div className="mobile-nav-inner">{items.map((item) => {

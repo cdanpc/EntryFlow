@@ -14,9 +14,9 @@ This addresses `EMAXCONNSESSION` / session-mode max-client errors when serverles
 
 ### Desktop layout
 
-Above 1024px, the mobile navigation becomes a fixed 78px left sidebar (25% narrower than the original 104px rail). Attendees have Home, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail and adapts to the narrower width. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector, with search using twice the selector's share of the available width. Staff attendee details has a Back link inside the card above its label on desktop and mobile, returning to the same event's list.
+Above 1024px, the mobile navigation becomes a fixed 78px left sidebar (25% narrower than the original 104px rail). Attendees have Event, Find Ticket, and Sign in; staff have Attendees, Scan, and Activity. The staff role/sign-out menu sits at the bottom of the rail and adapts to the narrower width. Event selection is carried in staff navigation links. Desktop Attendees places the name/code search beside the event selector, with search using twice the selector's share of the available width. Staff attendee details has a Back link inside the card above its label on desktop and mobile, returning to the same event's list.
 
-Public event details uses the shared Home/Find Ticket header. Back to events appears above the event photo on mobile, tablet, and desktop; the compact floating navigation still appears after scrolling.
+Public event details uses the shared Event/Find Ticket header. Back to events appears above the event photo on mobile, tablet, and desktop; the compact floating navigation still appears after scrolling.
 
 Brand marks use the supplied `Logo/Glossy Blue E Arrow Logo.png` through the reusable `BrandLogo` component. Next.js optimizes the image for display; CSS frames its white margins without altering the source artwork. Header, staff home, sidebar, sign-in, ticket, and footer branding share this asset.
 
@@ -26,9 +26,9 @@ Back links use zero top/bottom margins. Sign-in and attendee-detail cards use co
 
 ### Event browsing
 
-Search upcoming events by title or place. One visible Filter button opens a compact dropdown containing alphabetical/date/slot ordering, an inclusive 0–100 remaining-slots range, and date windows for today or the next 7/30 days in Cebu time. Apply submits the combined choices and search text; Reset clears the criteria while preserving the submitted search. Escape and outside click close the panel. Filter state is encoded in the URL and invalid values safely fall back to defaults. Remaining slots count confirmed and checked-in registrations and clamp at zero; registration still enforces authoritative database capacity.
+Search upcoming events by title or place. The search icon is inside the left edge, followed by the text field; the filter icon sits inside the right edge on mobile and desktop. Its dropdown contains only Order: date soonest/latest, name A–Z/Z–A, and remaining slots low/high. Apply preserves search text; Reset restores default order. Escape and outside click close the panel. Order is stored in the URL and invalid values use safe defaults. Removed date-window and slot-range parameters are ignored. Remaining slots count confirmed/checked-in registrations and clamp at zero; registration capacity checks remain authoritative.
 
-Desktop places Events, centered search (up to 640px), and Filter in one row. Mobile puts search and Filter in one row below Events. The blank strip above Events remains 20px on desktop. No-match results offer Reset search and filters.
+Desktop places Events beside a centered search bar (up to 640px). Mobile places the combined search/filter bar below Events. The blank strip above Events remains 20px on desktop. No-match results offer Clear search.
 
 The public event grid uses three columns above 1024px, four from 1280px, and five from 1440px. Cards retain event photos, date, title, place, and availability. Desktop styling lives in `src/app/desktop.css`; compact layouts keep their existing dock and numbered attendee list. Desktop event-detail navigation remains visible even when scrolled to the top. Reduced-motion preferences are respected.
 
@@ -40,7 +40,13 @@ The dock links to Attendees, Scan, and Activity; only the current page is highli
 
 Scan supports camera scanning and six-character manual ticket entry on both mobile and desktop. Both methods open protected ticket review before staff explicitly check in the attendee. Manual lookup is authenticated and rate limited; when an event is selected, the code must belong to that event. Without event context, the unique manual code resolves a ticket for review. Lookup does not change attendance. The former check-in desk on Attendees and separate Manual entry sidebar link have been removed.
 
-On mobile and tablet, directory rows show a page-aware number, attendee name, and status. Tapping a row opens the protected attendee details. Summary counters, contact details, codes, and timestamps are omitted from these compact lists; full details remain on the detail screen, with contacts restricted to Organizers. Desktop keeps its table and summary. Page navigation and directory requests use a centered three-dot circular loader, with a static indicator when reduced motion is requested.
+On mobile and tablet, directory rows show a page-aware number, attendee name, and status. Tapping a row opens the protected attendee details. Summary counters, contact details, codes, and timestamps are omitted from these compact lists; full details remain on the detail screen, with contacts restricted to Organizers. Desktop keeps its detailed table. Attendee and Activity requests show row skeletons while records load.
+
+### Loading system
+
+The shared loading primitives in `src/components/loading-indicator.tsx` and `src/app/loading.css` adapt `Loading State/EntryFlow_Loading_System_Demo.html`: a static brand mark with a rotating blue/cyan ring for page transitions, event-card and attendee-row skeletons, local verification overlays, and inline button spinners. Reduced motion stops ring/shimmer animation and preserves status labels.
+
+Event results stream through a React Suspense boundary so navigation/search controls can appear with card skeletons during the real database read. Staff request skeletons hide stale result rows while keeping search/filter controls available. Scan/manual lookup and check-in verification show local overlays; registration, sign-in, and ticket lookup show button spinners during actual pending actions. Animation lifetimes follow real requests/navigation, and success still comes from server responses. The original HTML remains a design reference; its demonstration scripts are not part of the application.
 
 The search endpoint authenticates staff, scopes queries to a published/closed event, and returns `private, no-store` responses. Door Staff receive names, manual codes, statuses, and operational timestamps; only Organizers receive contacts. QR secrets are excluded. Loading, no-match, session-expiry, and retry states are included. No schema migration is required. Device/camera and responsive visual review remain pending.
 

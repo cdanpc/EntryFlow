@@ -1,17 +1,19 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState, useTransition } from "react";
 import type { IScannerControls } from "@zxing/browser";
 import { useRouter } from "next/navigation";
 import { checkInTicket, type CheckInState } from "@/app/staff/actions";
 import { CheckInResult } from "@/components/check-in-result";
 import { findStaffTicket } from "@/app/staff/scan/actions";
-import { LoadingDots } from "@/components/loading-dots";
+import { ButtonSpinner, LoadingOverlay } from "@/components/loading-indicator";
 
 export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId: string; enabled: boolean; scannerOnly?: boolean }) {
   const router = useRouter();
+  const [openingTicket, startTicketTransition] = useTransition();
   const action = (scannerOnly ? findStaffTicket : checkInTicket).bind(null, eventId);
   const [state, formAction, pending] = useActionState(action, { kind: "idle", message: "" } satisfies CheckInState);
+  const busy = pending || openingTicket;
   const [scanning, setScanning] = useState(scannerOnly);
   const [cameraError, setCameraError] = useState("");
   const [scanStatus, setScanStatus] = useState("");
@@ -52,7 +54,7 @@ export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId
             if (/^[A-Za-z0-9_-]{32,64}$/.test(token ?? "")) {
               setScanStatus("Opening ticket…");
               const selectedEvent = new URLSearchParams(window.location.search).get("eventId");
-              router.push(`/staff/verify/${token}${selectedEvent ? `?eventId=${encodeURIComponent(selectedEvent)}` : ""}`);
+              startTicketTransition(() => router.push(`/staff/verify/${token}${selectedEvent ? `?eventId=${encodeURIComponent(selectedEvent)}` : ""}`));
             } else setCameraError("This is not an EntryFlow ticket QR. Try another code.");
             return;
           }
@@ -84,16 +86,16 @@ export function CheckInForm({ eventId, enabled, scannerOnly = false }: { eventId
     };
   }, [scanning, enabled, eventId, scannerOnly, router]);
 
-  if (scannerOnly) return <section className="mobile-scanner" aria-label="Scan or enter a ticket"><div className="scanner-frame">{scanning && <video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" />}{!scanning && <div className="scanner-idle">Camera paused</div>}<span className="scanner-corners" aria-hidden="true" /></div><p>Place the attendee&apos;s QR code inside the frame.</p><button className="camera-button" type="button" disabled={pending} onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Start camera"}</button>{cameraError && <p className="field-error" role="alert">{cameraError}</p>}{scanStatus && <p role="status">{scanStatus}</p>}
-    <form action={formAction} className="checkin-form scan-manual-form" aria-busy={pending} onSubmit={() => { controlsRef.current?.stop(); setScanning(false); setScanStatus(""); }}>
+  if (scannerOnly) return <section className="mobile-scanner" aria-label="Scan or enter a ticket"><div className="scanner-frame">{scanning && <video ref={videoRef} muted playsInline aria-label="Camera preview for QR scanning" />}{!scanning && <div className="scanner-idle">Camera paused</div>}<span className="scanner-corners" aria-hidden="true" /></div><p>Place the attendee&apos;s QR code inside the frame.</p><button className="camera-button" type="button" disabled={busy} onClick={() => { setCameraError(""); setScanStatus(""); setScanning((current) => !current); }}>{scanning ? "Stop camera" : "Start camera"}</button>{cameraError && <p className="field-error" role="alert">{cameraError}</p>}{scanStatus && !busy && <p role="status">{scanStatus}</p>}
+    <form action={formAction} className="checkin-form scan-manual-form" aria-busy={busy} onSubmit={() => { controlsRef.current?.stop(); setScanning(false); setScanStatus(""); }}>
       <label htmlFor="scan-manual-code">Or enter ticket code</label>
-      <div className="checkin-entry"><input id="scan-manual-code" name="manualCode" placeholder="A7K2P9" required minLength={6} maxLength={6} pattern="[A-Za-z0-9]{6}" autoComplete="off" autoCapitalize="characters" spellCheck={false} disabled={pending} /><button type="submit" disabled={pending}>{pending ? "Opening…" : "Verify ticket"}</button></div>
+      <div className="checkin-entry"><input id="scan-manual-code" name="manualCode" placeholder="A7K2P9" required minLength={6} maxLength={6} pattern="[A-Za-z0-9]{6}" autoComplete="off" autoCapitalize="characters" spellCheck={false} disabled={busy} /><button type="submit" disabled={busy}>{busy && <ButtonSpinner />}{busy ? "Opening…" : "Verify ticket"}</button></div>
       <CheckInResult state={state} />
-    </form>{pending && <LoadingDots label="Opening ticket for verification" />}
+    </form>{busy && <LoadingOverlay label="Opening ticket…" description="Preparing verification." />}
   </section>;
 
   return (
-    <form ref={formRef} action={formAction} className="checkin-form" aria-busy={pending}>
+    <form ref={formRef} action={formAction} className="checkin-form legacy-checkin-form" aria-busy={pending}>
       <label htmlFor="ticketCode">Ticket code</label>
       <input ref={scannedCodeRef} type="hidden" name="ticketCode" />
       <div className="checkin-entry"><input id="ticketCode" name="manualCode" autoComplete="off" placeholder="Enter 6-character code" maxLength={6} disabled={pending} onFocus={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; }} onChange={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; setScanStatus(""); }} /><button type="submit" disabled={pending} onClick={() => { if (scannedCodeRef.current) scannedCodeRef.current.value = ""; setScanStatus(""); }}>{pending ? "Checking…" : "Check in"}</button></div>

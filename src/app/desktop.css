@@ -103,7 +103,7 @@
   .attendee-detail-back, .event-detail-back { min-height: 32px; }
   .sign-in-panel, .staff-detail-card { padding-top: 16px; }
   .attendee-home .events-section { padding: 0 0 48px; }
-  .attendee-home .event-browse-controls.section-heading { grid-template-columns: minmax(90px, 1fr) minmax(240px, 640px) minmax(90px, 1fr); grid-template-areas: "heading search filter"; align-items: center; gap: 24px; margin-bottom: 16px; }
+  .attendee-home .event-browse-controls.section-heading { grid-template-columns: minmax(90px, 1fr) minmax(240px, 640px) minmax(90px, 1fr); grid-template-areas: "heading search ."; align-items: center; gap: 24px; margin-bottom: 16px; }
   .attendee-home .section-heading .eyebrow { display: none; }
   .attendee-home .section-heading h2 { margin: 0; font-size: 28px; font-weight: 800; }
   .attendee-home .event-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px 16px; }
@@ -150,7 +150,6 @@
   .detail-layout { max-width: 1200px; margin: 0 auto; padding-top: 0; }
   .ticket-topbar { margin: 0; padding: 0; }
   .lookup-panel { margin-top: 24px; }
-  .loading-dots-overlay { left: var(--sidebar-width); }
 }
 
 @media (min-width: 1280px) { .attendee-home .event-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
