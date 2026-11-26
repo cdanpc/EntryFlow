@@ -1,2 +1,2 @@
-import { LoadingDots } from "@/components/loading-dots";
-export default function StaffLoading() { return <LoadingDots label="Loading staff workspace" />; }
+import { PageLoading } from "@/components/loading-indicator";
+export default function StaffLoading() { return <PageLoading label="Loading staff workspace…" />; }

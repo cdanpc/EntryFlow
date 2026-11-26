@@ -2,13 +2,14 @@
 
 import { useActionState, useState } from "react";
 import { signInStaff } from "@/app/staff/sign-in/actions";
+import { ButtonSpinner } from "@/components/loading-indicator";
 
 export function StaffSignInForm({ next }: { next: string }) {
   const [state, action, pending] = useActionState(signInStaff, { message: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <form action={action} className="registration-form">
+    <form action={action} className="registration-form" aria-busy={pending}>
       <input type="hidden" name="next" value={next} />
       {state.message && <p className="form-alert" role="alert">{state.message}</p>}
       <div className="field">
@@ -43,6 +44,7 @@ export function StaffSignInForm({ next }: { next: string }) {
         </div>
       </div>
       <button className="submit-button" type="submit" disabled={pending}>
+        {pending && <ButtonSpinner />}
         {pending ? "Signing in…" : "Sign in"}
       </button>
     </form>

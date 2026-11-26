@@ -1,5 +1,6 @@
-export type NavigationIconName = "home" | "search" | "scan" | "ticket" | "activity" | "signin";
+export type NavigationIconName = "home" | "search" | "scan" | "ticket" | "activity" | "signin" | "filter";
 export function NavigationIcon({ name }: { name: NavigationIconName }) {
+  if (name === "filter") return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h4m4 0h10M3 12h10m4 0h4M3 18h4m4 0h10" /><circle cx="9" cy="6" r="2" /><circle cx="15" cy="12" r="2" /><circle cx="9" cy="18" r="2" /></svg>;
   if (name === "signin") return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v16h-6M3 12h12m-4-4 4 4-4 4" /></svg>;
   if (name === "activity") return <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>;
   if (name === "ticket") return <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v5a2 2 0 0 0 0 4v5H4v-5a2 2 0 0 0 0-4V5Z" /><path d="M15 5v3m0 3v2m0 3v3" /></svg>;

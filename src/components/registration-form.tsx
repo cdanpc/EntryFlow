@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { registerForEvent, type RegistrationActionState } from "@/app/events/actions";
+import { ButtonSpinner } from "@/components/loading-indicator";
 
 const initialState: RegistrationActionState = { errors: {}, message: "" };
 
@@ -10,7 +11,7 @@ export function RegistrationForm({ eventId }: { eventId: string }) {
   const [state, formAction, pending] = useActionState(action, initialState);
 
   return (
-    <form action={formAction} className="registration-form" noValidate>
+    <form action={formAction} className="registration-form" noValidate aria-busy={pending}>
       {state.message && <p className="form-alert" role="alert">{state.message}</p>}
       <div className="field">
         <label htmlFor="fullName">Full name</label>
@@ -28,6 +29,7 @@ export function RegistrationForm({ eventId }: { eventId: string }) {
         {state.errors.mobile && <span className="field-error" id="mobile-error">{state.errors.mobile}</span>}
       </div>
       <button className="submit-button" type="submit" disabled={pending}>
+        {pending && <ButtonSpinner />}
         {pending ? "Saving your spot…" : "Register for this event"}
       </button>
       <p className="form-footnote">A QR ticket will be issued after registration.</p>

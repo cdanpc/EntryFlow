@@ -374,6 +374,8 @@ Use this log for items that affect multiple phases or need a single project-wide
 
 ## Development notes
 
+- 2026-11-26: Integrated the supplied Loading State HTML design into shared branded loaders, event/attendee skeletons, verification overlays, and pending-button spinners. Event results now stream behind a Suspense skeleton while keeping the existing query/registration rules. Applied the user's follow-up: search icon inside the left edge, order-filter icon inside the right edge on mobile/desktop, removed date-window/slot-range controls and behavior, and renamed attendee Home navigation to Event. All 28 remaining tests, lint, typecheck, and production build pass. Local production HTTP 200 resolved real event cards, included Order/Event navigation, omitted removed controls, and had no streaming error template. Browser animation/layout/device checks remain pending because browser access is unavailable.
+
 - 2026-11-26: Added a single Filter disclosure beside event search with order, inclusive 0–100 remaining-slot range, and Cebu date-window criteria. Desktop aligns Events, centered search, and Filter in one row; compact layouts place search/Filter together below Events. Reduced the desktop sidebar 25% from 104px to 78px, including role-menu fitting. All 30 tests, lint, typecheck, and production build pass; browser visual checks remain pending because browser access is unavailable.
 
 - 2026-11-26: Minimized vertical spacing around all Back/return link styles: zero outer margins, reduced detail/sign-in card top padding, no extra heading margin after sign-in Back, and a tighter event-detail top strip. Kept compact touch areas at 44px while desktop Back rows use 32px. Lint, typecheck, and production build pass; browser visual check remains pending.
